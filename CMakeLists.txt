@@ -183,7 +183,7 @@ include_directories(
 # )
 install(PROGRAMS
    scripts/client_move.py
-   
+   scripts/state_machine.py
    
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
