@@ -47,6 +47,17 @@ desired_position_sleep_.y = 8
 desired_orientation_sleep_ = Quaternion()
 desired_orientation_sleep_.w = 1
 
+class Room:
+    "A structure that can have any fields defined."
+    def __init__(self, **entries): self.__dict__.update(entries)
+
+entrance = Room(color='blue')
+ #entrance = Room(color='blue', x = 0, y = 5)
+closet = Room(color='red')
+living_room = Room(color='green')
+kitchen = Room(color='yellow')
+bathroom = Room(color='magenta')
+bedroom = Room(color='black')
 
 
 VERBOSE = False

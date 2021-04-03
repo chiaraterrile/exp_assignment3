@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot2_laser_xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_xacro">
 <!-- <xacro:include filename="$(find robot_description)/urdf/robot2_laser.gazebo"/> --> 
-<xacro:include filename="$(find planning)/urdf/robot2_laser.gazebo"/>
+<xacro:include filename="$(find exp_assignment3)/urdf/robot.gazebo"/>
 					
 	<xacro:property name="length_wheel" value="0.02" />
 	<xacro:property name="radius_wheel" value="0.05" />

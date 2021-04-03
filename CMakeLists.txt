@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   actionlib_msgs
   move_base_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,12 +58,12 @@ find_package (OpenCV REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- #add_message_files(
-   #FILES
-
+ add_message_files(
+   FILES
+   ball.msg
 #   Message1.msg
 #   Message2.msg
- #)
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -88,6 +89,7 @@ generate_messages(
    DEPENDENCIES
    geometry_msgs
    actionlib_msgs
+   std_msgs
  )
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -123,7 +125,7 @@ catkin_package(
   DEPENDS OpenCV
 #  INCLUDE_DIRS include
 #  LIBRARIES exp_assignment3
-#  CATKIN_DEPENDS roscpp rospy
+ # CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -184,6 +186,7 @@ include_directories(
 install(PROGRAMS
    scripts/client_move.py
    scripts/state_machine.py
+   scripts/object_detection.py
    
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
