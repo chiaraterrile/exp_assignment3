@@ -8,12 +8,23 @@ project(exp_assignment3)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
+  image_transport
   roscpp
   rospy
+  sensor_msgs
+  nav_msgs
+  geometry_msgs
+  std_msgs
+  message_generation
+  tf
+  actionlib_msgs
+  move_base_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+find_package (OpenCV REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -46,11 +57,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+ #add_message_files(
+   #FILES
+
 #   Message1.msg
 #   Message2.msg
-# )
+ #)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -60,11 +72,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
+#add_action_files(
+  #MoveBase.action
 #   Action1.action
 #   Action2.action
-# )
+#)
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
@@ -72,6 +84,11 @@ find_package(catkin REQUIRED COMPONENTS
 #   std_msgs  # Or other packages containing msgs
 # )
 
+generate_messages(
+   DEPENDENCIES
+   geometry_msgs
+   actionlib_msgs
+ )
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################
@@ -102,6 +119,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+
+  DEPENDS OpenCV
 #  INCLUDE_DIRS include
 #  LIBRARIES exp_assignment3
 #  CATKIN_DEPENDS roscpp rospy
@@ -162,7 +181,12 @@ include_directories(
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
-
+install(PROGRAMS
+   scripts/client_move.py
+   
+   
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
 # install(TARGETS ${PROJECT_NAME}_node
