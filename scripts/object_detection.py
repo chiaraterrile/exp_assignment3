@@ -22,16 +22,30 @@ import rospy
 # Ros Messages
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String,Float64
+from std_msgs.msg import Bool
 
 VERBOSE = False
 
-ball_pos_ = Point()
+ball_pos = Point()
+ball_info= ball()
+
+red_detected = False
+blue_detected = False
+green_detected = False
+black_detected = False
+magenta_detected = False
+yellow_detected = False
 
 def clbk_ball_pos(msg):
+         global ball_pos
+         ball_pos.x = msg.pose.pose.position.x
+         ball_pos.y = msg.pose.pose.position.y
+         ball_pos.z = msg.pose.pose.position.z
+         #print(ball_pos)
+
+
          
-         ball_pos_.x = msg.pose.pose.position.x
-         ball_pos_.y = msg.pose.pose.position.y
-         ball_pos_.z = msg.pose.pose.position.z
 
 
 class image_feature:
@@ -49,15 +63,19 @@ class image_feature:
         self.subscriber = rospy.Subscriber("/camera1/image_raw/compressed",
                                            CompressedImage, self.callback,  queue_size=1)
 
-   
+        self.sub = rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
 
     def callback(self, ros_data):
+        global blue_detected,green_detected,red_detected,magenta_detected,black_detected,yellow_detected,ball_pos,ball_info
         '''Callback function of subscribed topic. 
         Here images get converted and features detected'''
         if VERBOSE:
             print ('received image of type: "%s"' % ros_data.format)
 
         pub_ball = rospy.Publisher('/ball_info', ball, queue_size=10)
+
+        pub_detection = rospy.Publisher('/new_ball_detected', Bool , queue_size=10)
+        pub_coord = rospy.Publisher('/coord_available', Bool , queue_size=10)
         #### direct conversion to CV2 ####
         np_arr = np.fromstring(ros_data.data, np.uint8)
         image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
@@ -118,6 +136,9 @@ class image_feature:
         center = None
         # only proceed if at least one contour was found
         if len(cnts_green) > 0:
+            det = False
+            
+            
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
@@ -127,30 +148,30 @@ class image_feature:
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('green object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if green_detected != True :
+                det = True
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                    if vel.linear.x < 0.1 :
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'green' 
 
-        else:
-            vel = Twist()
-            vel.angular.z = 0.5
-            self.vel_pub.publish(vel)
-        
+                        pub_ball.publish(ball_info)
+
+                        green_detected = True
+                        det = False
+
         ##########   BLUE detection  #######################
         cnts_blue = cv2.findContours(mask_blue.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
@@ -161,35 +182,43 @@ class image_feature:
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
+            det = False
+            
             c = max(cnts_blue, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('blue object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if blue_detected != True:
+                det = True
+                
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                    if vel.linear.x < 0.1 :
+                       
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'blue' 
 
-        #else:
-            #vel = Twist()
-            #vel.angular.z = 0.5
-            #self.vel_pub.publish(vel)
+                        pub_ball.publish(ball_info)
+
+                        blue_detected = True
+                        det = False
+                       
+
+
+
 
         ##########   RED detection  #######################
         cnts_red = cv2.findContours(mask_red.copy(), cv2.RETR_EXTERNAL,
@@ -198,6 +227,7 @@ class image_feature:
         center = None
         # only proceed if at least one contour was found
         if len(cnts_red) > 0:
+            det = False
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
@@ -207,30 +237,29 @@ class image_feature:
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('red object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if red_detected != True :
+                det = True
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                    if vel.linear.x < 0.1 :
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'red' 
 
+                        pub_ball.publish(ball_info)
 
-        #else:
-           # vel = Twist()
-            #vel.angular.z = 0.5
-            #self.vel_pub.publish(vel)
+                        red_detected = True
+                        det = False
 
 
         ##########   BLACK detection  #######################
@@ -239,7 +268,9 @@ class image_feature:
         cnts_black = imutils.grab_contours(cnts_black)
         center = None
         # only proceed if at least one contour was found
-        if len(cnts_red) > 0:
+     
+        if len(cnts_black) > 0:
+            det = False
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
@@ -249,30 +280,29 @@ class image_feature:
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('black object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if black_detected != True :
+                det = True
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                    if vel.linear.x < 0.1 :
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'black' 
 
+                        pub_ball.publish(ball_info)
 
-        #else:
-           # vel = Twist()
-           # vel.angular.z = 0.5
-           # self.vel_pub.publish(vel)
+                        black_detected = True
+                        det = False
 
         
         ##########   MAGENTA detection  #######################
@@ -282,6 +312,7 @@ class image_feature:
         center = None
         # only proceed if at least one contour was found
         if len(cnts_magenta) > 0:
+            det = False
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
@@ -291,30 +322,30 @@ class image_feature:
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('magenta object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if magenta_detected != True :
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                det = True
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
+                    if vel.linear.x < 0.1 :
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'magenta' 
 
-       # else:
-           # vel = Twist()
-            #vel.angular.z = 0.5
-            #self.vel_pub.publish(vel)
+                        pub_ball.publish(ball_info)
+
+                        magenta_detected = True
+                        det = False
         
 
         ##########   YELLOW detection  #######################
@@ -324,6 +355,7 @@ class image_feature:
         center = None
         # only proceed if at least one contour was found
         if len(cnts_yellow) > 0:
+            det = False
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
             # centroid
@@ -333,30 +365,31 @@ class image_feature:
             center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
             print ('yellow object')
             # only proceed if the radius meets a minimum size
-            if radius > 10:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                cv2.circle(image_np, (int(x), int(y)), int(radius),
-                           (0, 255, 255), 2)
-                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
-                vel = Twist()
-                vel.angular.z = -0.002*(center[0]-400)
-                vel.linear.x = -0.01*(radius-100) 
-                self.vel_pub.publish(vel)
+            if yellow_detected != True :
 
-                if vel.linear.x < 0.1 :
-                    rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-                    ball_info= ball()
-                    ball_info.x = ball_pos_.x
-                    ball_info.y = ball_pos_.y
-                    ball_info.color = " blue "
-                    pub_ball.publish(ball_info)
+                det = True
+                pub_detection.publish(det)
+                if radius > 10:
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius),
+                            (0, 255, 255), 2)
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    vel = Twist()
+                    vel.angular.z = -0.002*(center[0]-400)
+                    vel.linear.x = -0.01*(radius-100) 
+                    self.vel_pub.publish(vel)
 
+                    if vel.linear.x < 0.1 :
+                        ball_info.x = ball_pos.x
+                        ball_info.y = ball_pos.y
+                        ball_info.color = 'yellow' 
 
-        #else:
-            #vel = Twist()
-            #vel.angular.z = 0.5
-            #self.vel_pub.publish(vel)
+                        pub_ball.publish(ball_info)
+
+                        yellow_detected = True
+                        det = False
+
 
         # update the points queue
         # pts.appendleft(center)
