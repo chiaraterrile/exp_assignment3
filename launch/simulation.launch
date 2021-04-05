@@ -61,6 +61,7 @@
    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 	args="-urdf -model robot1 -param robot_description -x -5.00 -y 8.00 -z 0.05 -Y -1.57"/> 
 	
+  <node name = "OpenCV" pkg="exp_assignment3" type="object_detection.py" output="screen" launch-prefix="gnome-terminal --command"/> -->
 
    <param name="human_description1" textfile="$(find exp_assignment3)/urdf/human.urdf" />
       
