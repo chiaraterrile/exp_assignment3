@@ -12,6 +12,7 @@ This scripts is a ROS node that implements a FSM that according to what detects 
 import roslib
 from std_msgs.msg import Bool
 from exp_assignment3.msg import ball
+from exp_assignment3.msg import command
 import time
 import rospy
 import smach
@@ -33,7 +34,8 @@ from scipy.ndimage import filters
 import imutils
 import cv2
 from sensor_msgs.msg import CompressedImage
-import actionlib
+import actionlib 
+from actionlib import GoalID
 from geometry_msgs.msg import Twist, Point, Pose
 from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
@@ -53,13 +55,12 @@ class Room:
     "A structure that can have any fields defined."
     def __init__(self, **entries): self.__dict__.update(entries)
 
-entrance = Room(color="blue")
- #entrance = Room(color='blue', x = 0, y = 5)
-closet = Room(color="red")
-living_room = Room(color="green")
-kitchen = Room(color="yellow")
-bathroom = Room(color="magenta")
-bedroom = Room(color="black")
+entrance = Room(color="blue",known = False)
+closet = Room(color="red",known = False)
+living_room = Room(color="green",known = False)
+kitchen = Room(color="yellow",known = False)
+bathroom = Room(color="magenta",known = False)
+bedroom = Room(color="black",known = False)
 
 
 VERBOSE = False
@@ -69,12 +70,20 @@ VERBOSE = False
 ball_info = ball()
 
 det = False    
-coord = False 
+flag_play = False 
 # FMS functions
-def clbk_coord(msg):
-    global coord
-    coord = msg
-    #print ('coord: ', coord)
+def clbk_play(msg):
+    global flag_play
+    flag_play = msg
+    if flag_play != False :
+        print('lllllll')
+        #rospy.ROSInterruptException()
+        pub = rospy.Publisher('/move_base/cancel', GoalID, queue_size=10)
+        canc = GoalID ()
+        pub.publish(canc)
+
+        #return ('play')
+    
 
 def clbk_ball_info(msg):
         global ball_info
@@ -89,45 +98,39 @@ def clbk_ball_info(msg):
 
         if color_found == entrance.color:
                 print ('Found entrance!')
-                entrance = Room(color="blue", x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                entrance = Room(color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
         elif color_found == bedroom.color:
                 print ('Found bedroom!')
-                bedroom = Room(color="black",x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                bedroom = Room(color="black",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
         elif color_found == closet.color:
                 print ('Found closet!')
-                closet = Room(color="red",x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                closet = Room(color="red",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det =  False
                 
 
         elif color_found ==living_room.color:
                 print ('Found living room!')
-                living_room = Room(color="green",x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                living_room = Room(color="green",known = True ,x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
 
         elif color_found == bathroom.color:
                 print ('Found bathroom!')
-                bathroom = Room(color="magenta",x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                bathroom = Room(color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
         elif color_found == kitchen.color:
                 print ('Found kitchen!')
-                kitchen = Room(color="yellow",x = ball_info.x, y = ball_info.y)
-                print ('Back to NORMAL state')
+                kitchen = Room(color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
@@ -139,26 +142,20 @@ def clbk_track(msg):
 
         if det != False :
             print ('############ Substate TRACK ##############')
-            
-
-            
-                
+   
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
        
 
-          
-                
-
-                
-
-
-  
-
-        
 
 def user_action():
-	"""! this function controls the next state of the FSM  """		
-        return ('sleep')
+	"""! this function controls the next state of the FSM  """
+        global flag_play
+        if flag_play != False :
+                return ('play')
+        else :
+                return ('normal')
+        #print('forse ci siamol')	
+        #return ('sleep')
   # return random.choice(['normal','sleep'])
 
 
@@ -170,11 +167,13 @@ class RandomlyGoing(smach.State):
 	
         smach.State.__init__(self, 
                              #outcomes=['sleep','normal','play'],
-                             outcomes=['normal'],
+                             outcomes=['normal','play'],
                              input_keys=['randomlygoing_counter_in'],
                              output_keys=['randomlygoing_counter_out'])
+
+
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
-        #self.sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
+        self.sub_play = rospy.Subscriber('/play', Bool, clbk_play)
         
     def execute(self, userdata):
     
@@ -184,9 +183,9 @@ class RandomlyGoing(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global det ,ball_info
-        
-         
+        global det ,ball_info,flag_play
+        print(flag_play)
+       
 
         desired_position_normal_ = Point()
         desired_orientation_normal_ = Quaternion()
@@ -211,13 +210,7 @@ class RandomlyGoing(smach.State):
         F.y = -7
         points = [A,B,C,D,E,F]
         desired_position_normal_= random.choice(points)
-        #desired_position_normal_.x = random.randint(-5,6)
-        #desired_position_normal_.y = random.randint(-8,8)
-
-       # desired_position_normal_.x = 5
-       # desired_position_normal_.y = 7
-
-
+        
         desired_orientation_normal_.w = 1
 
         print('I am moving to random position : ', desired_position_normal_)
@@ -233,7 +226,6 @@ class RandomlyGoing(smach.State):
         goal.target_pose.pose.orientation.w = desired_orientation_normal_.w
 
         client.send_goal(goal)
-        
         wait = client.wait_for_result()
 
         
@@ -241,10 +233,10 @@ class RandomlyGoing(smach.State):
 
         print('I am arrived! ')
 
-        return ('normal')
-        
+        return user_action()
+                
         # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
-            
+        
         
         
         rospy.loginfo('Executing state RANDOMLYGOING (users = %f)'%userdata.randomlygoing_counter_in)
@@ -338,7 +330,7 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('RANDOMLYGOING', RandomlyGoing(), 
-                               transitions={'normal':'RANDOMLYGOING'},
+                               transitions={'normal':'RANDOMLYGOING','play':'PLAYING'},
                                remapping={'randomlygoing_counter_in':'sm_counter', 
                                           'randomlygoing_counter_out':'sm_counter'})
 

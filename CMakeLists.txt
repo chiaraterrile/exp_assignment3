@@ -61,6 +61,7 @@ find_package (OpenCV REQUIRED)
  add_message_files(
    FILES
    ball.msg
+   command.msg
 #   Message1.msg
 #   Message2.msg
  )
