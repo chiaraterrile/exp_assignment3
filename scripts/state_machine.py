@@ -56,7 +56,7 @@ class Room:
 entrance = Room(color="blue")
  #entrance = Room(color='blue', x = 0, y = 5)
 closet = Room(color="red")
-living_room = Room(color='green')
+living_room = Room(color="green")
 kitchen = Room(color="yellow")
 bathroom = Room(color="magenta")
 bedroom = Room(color="black")
@@ -76,8 +76,65 @@ def clbk_coord(msg):
     coord = msg
     #print ('coord: ', coord)
 
+def clbk_ball_info(msg):
+        global ball_info
+        global det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+
+        ball_info.x = msg.x
+        ball_info.y = msg.y
+        ball_info.color = msg.color
+        #print(ball_info)
+        color_found = ball_info.color
+        #print(color_found)
+
+        if color_found == entrance.color:
+                print ('Found entrance!')
+                entrance = Room(color="blue", x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det = False 
+
+        elif color_found == bedroom.color:
+                print ('Found bedroom!')
+                bedroom = Room(color="black",x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det = False 
+
+        elif color_found == closet.color:
+                print ('Found closet!')
+                closet = Room(color="red",x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det =  False
+                
+
+        elif color_found ==living_room.color:
+                print ('Found living room!')
+                living_room = Room(color="green",x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det = False 
+
+
+        elif color_found == bathroom.color:
+                print ('Found bathroom!')
+                bathroom = Room(color="magenta",x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det = False 
+
+        elif color_found == kitchen.color:
+                print ('Found kitchen!')
+                kitchen = Room(color="yellow",x = ball_info.x, y = ball_info.y)
+                print ('Back to NORMAL state')
+                ball_info = ball()
+                det = False 
+
+
+
 def clbk_track(msg):
-        global det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet
+        global det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
         det = msg
 
         if det != False :
@@ -86,59 +143,17 @@ def clbk_track(msg):
 
             
                 
-            rospy.Subscriber('/ball_info', ball, clbk_ball_info)
-            
-            color_found = ball_info.color
-            
-            if color_found == entrance.color:
-                    print ('Found entrance!')
-                    entrance = Room(color='blue', x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det = False 
+            sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
+       
 
-            elif color_found == bedroom.color:
-                    print ('Found bedroom!')
-                    bedroom = Room(color="black",x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det = False 
-
-            elif color_found == closet.color:
-                    print ('Found closet!')
-                    closet = Room(color="red",x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det =  False
-
-            elif color_found ==living_room.color:
-                    print ('Found living room!')
-                    living_room = Room(color="green",x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det = False 
-
-
-            elif color_found == bathroom.color:
-                    print ('Found bathroom!')
-                    bathroom = Room(color="magenta",x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det = False 
-
-            elif color_found == kitchen.color:
-                    print ('Found kitchen!')
-                    kitchen = Room(color="yellow",x = ball_info.x, y = ball_info.y)
-                    print ('Back to NORMAL state')
-                    det = False 
-
+          
+                
 
                 
 
 
-        #print ('Back to NORMAL')
+  
 
-def clbk_ball_info(msg):
-        global ball_info
-
-        ball_info.x = msg.x
-        ball_info.y = msg.y
-        ball_info.color = msg.color
         
 
 def user_action():
@@ -155,10 +170,11 @@ class RandomlyGoing(smach.State):
 	
         smach.State.__init__(self, 
                              #outcomes=['sleep','normal','play'],
-                             outcomes=['sleep'],
+                             outcomes=['normal'],
                              input_keys=['randomlygoing_counter_in'],
                              output_keys=['randomlygoing_counter_out'])
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
+        #self.sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
         
     def execute(self, userdata):
     
@@ -168,19 +184,38 @@ class RandomlyGoing(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global det 
+        global det ,ball_info
         
          
 
         desired_position_normal_ = Point()
         desired_orientation_normal_ = Quaternion()
         
-            
+        A= Point ()
+        A.x = -1
+        A.y = 8
+        B = Point()  
+        B.x = -4
+        B.y = 2
+        C = Point()  
+        C.x = -3
+        C.y = -3
+        D = Point()  
+        D.x = 4
+        D.y = 0
+        E = Point()  
+        E.x = 4
+        E.y = -4
+        F = Point()  
+        F.x = 4
+        F.y = -7
+        points = [A,B,C,D,E,F]
+        desired_position_normal_= random.choice(points)
         #desired_position_normal_.x = random.randint(-5,6)
         #desired_position_normal_.y = random.randint(-8,8)
 
-        desired_position_normal_.x = 0
-        desired_position_normal_.y = 7
+       # desired_position_normal_.x = 5
+       # desired_position_normal_.y = 7
 
 
         desired_orientation_normal_.w = 1
@@ -206,7 +241,7 @@ class RandomlyGoing(smach.State):
 
         print('I am arrived! ')
 
-        return ('sleep')
+        return ('normal')
         
         # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
             
@@ -303,7 +338,7 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('RANDOMLYGOING', RandomlyGoing(), 
-                               transitions={'sleep':'SLEEPING'},
+                               transitions={'normal':'RANDOMLYGOING'},
                                remapping={'randomlygoing_counter_in':'sm_counter', 
                                           'randomlygoing_counter_out':'sm_counter'})
 

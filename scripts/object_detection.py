@@ -168,7 +168,8 @@ class image_feature:
                         ball_info.color = 'green' 
 
                         pub_ball.publish(ball_info)
-
+                        print('published!')
+                        time.sleep(5)
                         green_detected = True
                         det = False
 
@@ -212,7 +213,8 @@ class image_feature:
                         ball_info.color = 'blue' 
 
                         pub_ball.publish(ball_info)
-
+                        print('published!')
+                        time.sleep(5)
                         blue_detected = True
                         det = False
                        
@@ -257,6 +259,8 @@ class image_feature:
                         ball_info.color = 'red' 
 
                         pub_ball.publish(ball_info)
+                        print('published!')
+                        time.sleep(5)
 
                         red_detected = True
                         det = False
@@ -298,8 +302,10 @@ class image_feature:
                         ball_info.x = ball_pos.x
                         ball_info.y = ball_pos.y
                         ball_info.color = 'black' 
-
+                        #print(ball_info)
                         pub_ball.publish(ball_info)
+                        print('published!')
+                        time.sleep(2)
 
                         black_detected = True
                         det = False
@@ -343,6 +349,8 @@ class image_feature:
                         ball_info.color = 'magenta' 
 
                         pub_ball.publish(ball_info)
+                        print('published!')
+                        time.sleep(5)
 
                         magenta_detected = True
                         det = False
@@ -386,6 +394,8 @@ class image_feature:
                         ball_info.color = 'yellow' 
 
                         pub_ball.publish(ball_info)
+                        print('published!')
+                        time.sleep(5)
 
                         yellow_detected = True
                         det = False
