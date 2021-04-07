@@ -30,8 +30,8 @@ VERBOSE = False
 ball_pos = Point()
 ball_info= ball()
 
-#GoDetection = Bool()
-GoDetection = 0
+GoDetection = Bool()
+GoDetection = False
 
 red_detected = False
 blue_detected = False
@@ -77,7 +77,7 @@ class image_feature:
 
         self.sub = rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
 
-        self.sub_state = rospy.Subscriber('/state_fsm', Float64, clbk_state)
+        self.sub_state = rospy.Subscriber('/state_fsm', Bool, clbk_state)
 
     def callback(self, ros_data):
         global blue_detected,green_detected,red_detected,magenta_detected,black_detected,yellow_detected,ball_pos,ball_info,GoDetection
@@ -98,10 +98,9 @@ class image_feature:
         print('################',GoDetection)
         
 
-        if GoDetection > 0.1 :
+        if GoDetection  :
 
             print('sono entrato')
-            print(GoDetection)
         
             greenLower = (50, 50, 50)
             greenUpper = (70, 255, 255)

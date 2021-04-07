@@ -55,7 +55,7 @@ person_position = Point()
 person_position.x = -5
 person_position.y = 8
 
-GoDetection = 0
+GoDetection = False
 
 class Room:
     "A structure that can have any fields defined."
@@ -180,7 +180,7 @@ class Normal(smach.State):
 
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
         self.sub_play = rospy.Subscriber('/play', Bool, clbk_play)
-        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
         
         #state = 'normal'
@@ -233,7 +233,7 @@ class Normal(smach.State):
 
         print('I am moving to random position : ', desired_position_normal_)
         time.sleep(2)
-        GoDetection = 1
+        GoDetection = True
         self.pub_state.publish(GoDetection)
         #self.pub_state.publish(state_normal)
         print('published!!!')
@@ -279,7 +279,7 @@ class Sleeping(smach.State):
                              input_keys=['sleeping_counter_in'],
                              output_keys=['sleeping_counter_out'])
         
-        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
     def execute(self, userdata):
         
@@ -293,7 +293,7 @@ class Sleeping(smach.State):
         
         print('I am moving to home : ', desired_position_sleep_)
         time.sleep(2)
-        GoDetection = 0
+        GoDetection = False
         self.pub_state.publish(state_normal)
 
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
@@ -329,7 +329,7 @@ class Playing(smach.State):
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
         self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
-        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
     def execute(self, userdata):
         """! Playing state execution 
@@ -342,7 +342,7 @@ class Playing(smach.State):
         print('I am moving to the user : ', person_position)
 
         time.sleep(2)
-        GoDetection = 0
+        GoDetection = False
         self.pub_state.publish(GoDetection)
 
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
@@ -465,7 +465,7 @@ class Find(smach.State):
                              input_keys=['find_counter_in'],
                              output_keys=['find_counter_out'])
         
-        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
     def execute(self, userdata):
         
@@ -477,7 +477,7 @@ class Find(smach.State):
         global GoDetection
         print('-----------FIND-------------------')
         time.sleep(2)
-        GoDetection = 1
+        GoDetection = True
         self.pub_state.publish(GoDetection)
         return('normal')
    	
