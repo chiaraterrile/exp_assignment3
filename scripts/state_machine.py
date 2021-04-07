@@ -51,16 +51,22 @@ desired_position_sleep_.y = 8
 desired_orientation_sleep_ = Quaternion()
 desired_orientation_sleep_.w = 1
 
+person_position = Point()
+person_position.x = -5
+person_position.y = 8
+
+GoDetection = 0
+
 class Room:
     "A structure that can have any fields defined."
     def __init__(self, **entries): self.__dict__.update(entries)
 
-entrance = Room(color="blue",known = False)
-closet = Room(color="red",known = False)
-living_room = Room(color="green",known = False)
-kitchen = Room(color="yellow",known = False)
-bathroom = Room(color="magenta",known = False)
-bedroom = Room(color="black",known = False)
+room1 = Room(location = "entrance",color="blue",known = False)
+room2 = Room(location = "closet",color="red",known = False)
+room3 = Room(location = "living room",color="green",known = False)
+room4 = Room(location = "kitchen",color="yellow",known = False)
+room5 = Room(location = "bathroom",color="magenta",known = False)
+room6 = Room(location = "bedroom",color="black",known = False)
 
 
 VERBOSE = False
@@ -68,6 +74,7 @@ VERBOSE = False
 # flag to indicate that a new ball has been detected
 
 ball_info = ball()
+command_play = command()
 
 det = False    
 flag_play = False 
@@ -76,18 +83,20 @@ def clbk_play(msg):
     global flag_play
     flag_play = msg
     if flag_play != False :
-        print('lllllll')
-        #rospy.ROSInterruptException()
         pub = rospy.Publisher('/move_base/cancel', GoalID, queue_size=10)
         canc = GoalID ()
         pub.publish(canc)
 
         #return ('play')
-    
+
+def clbk_go(msg):
+    global command_play
+    command_play = msg
+    #print (command_play)
 
 def clbk_ball_info(msg):
         global ball_info
-        global det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+        global det,ball,coord,room1,room2,room3,room4,room5,room6,ball_info
 
         ball_info.x = msg.x
         ball_info.y = msg.y
@@ -96,44 +105,44 @@ def clbk_ball_info(msg):
         color_found = ball_info.color
         #print(color_found)
 
-        if color_found == entrance.color:
-                print ('Found entrance!')
-                entrance = Room(color="blue",known = True,  x = ball_info.x, y = ball_info.y)
+        if color_found == room1.color:
+                print ('Found ',room1.location)
+                room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
-        elif color_found == bedroom.color:
-                print ('Found bedroom!')
-                bedroom = Room(color="black",known = True, x = ball_info.x, y = ball_info.y)
-                ball_info = ball()
-                det = False 
 
-        elif color_found == closet.color:
-                print ('Found closet!')
-                closet = Room(color="red",known = True, x = ball_info.x, y = ball_info.y)
+        elif color_found == room2.color:
+                print ('Found ',room2.location)
+                room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det =  False
                 
 
-        elif color_found ==living_room.color:
-                print ('Found living room!')
-                living_room = Room(color="green",known = True ,x = ball_info.x, y = ball_info.y)
+        elif color_found ==room3.color:
+                print ('Found ',room3.location)
+                room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
 
-        elif color_found == bathroom.color:
-                print ('Found bathroom!')
-                bathroom = Room(color="magenta",known = True, x = ball_info.x, y = ball_info.y)
+        elif color_found == room4.color:
+                print ('Found ',room4.location)
+                room4 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
-        elif color_found == kitchen.color:
-                print ('Found kitchen!')
-                kitchen = Room(color="yellow",known = True, x = ball_info.x, y = ball_info.y)
+        elif color_found == room5.color:
+                print ('Found ',room5.location)
+                room5 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
 
+        elif color_found == room6.color:
+                print ('Found ',room6.location)
+                room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
+                ball_info = ball()
+                det = False 
 
 
 def clbk_track(msg):
@@ -154,27 +163,29 @@ def user_action():
                 return ('play')
         else :
                 return ('normal')
-        #print('forse ci siamol')	
-        #return ('sleep')
-  # return random.choice(['normal','sleep'])
+        
 
-
-# define state RandomlyGoing
-class RandomlyGoing(smach.State):
-    """! Define the RandomlyGoing state (normal) """
+# define state Normal
+class Normal(smach.State):
+    """! Define the Normal state (normal) """
     def __init__(self):
         
 	
         smach.State.__init__(self, 
                              #outcomes=['sleep','normal','play'],
                              outcomes=['normal','play'],
-                             input_keys=['randomlygoing_counter_in'],
-                             output_keys=['randomlygoing_counter_out'])
+                             input_keys=['normal_counter_in'],
+                             output_keys=['normal_counter_out'])
 
 
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
         self.sub_play = rospy.Subscriber('/play', Bool, clbk_play)
+        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
         
+        
+        #state = 'normal'
+        #self.pub_state.publish(state)
+        #print('xoxoxoxooxo')
     def execute(self, userdata):
     
         """! Normal state execution 
@@ -183,12 +194,17 @@ class RandomlyGoing(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global det ,ball_info,flag_play
-        print(flag_play)
-       
+        global det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
+        
+        
+        #pub_state = rospy.Publisher('/state_fsm', String, queue_size=10)
+        #state_normal = 'normal'
+        
 
         desired_position_normal_ = Point()
         desired_orientation_normal_ = Quaternion()
+
+        
         
         A= Point ()
         A.x = -1
@@ -210,10 +226,17 @@ class RandomlyGoing(smach.State):
         F.y = -7
         points = [A,B,C,D,E,F]
         desired_position_normal_= random.choice(points)
+        #desired_position_normal_.x = A.x
+        #desired_position_normal_.y = A.y
         
         desired_orientation_normal_.w = 1
 
         print('I am moving to random position : ', desired_position_normal_)
+        time.sleep(2)
+        GoDetection = 1
+        self.pub_state.publish(GoDetection)
+        #self.pub_state.publish(state_normal)
+        print('published!!!')
 
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         client.wait_for_server()
@@ -232,15 +255,15 @@ class RandomlyGoing(smach.State):
         
 
         print('I am arrived! ')
-
+        self.sub.unregister()
         return user_action()
                 
         # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
         
         
         
-        rospy.loginfo('Executing state RANDOMLYGOING (users = %f)'%userdata.randomlygoing_counter_in)
-        userdata.randomlygoing_counter_out = userdata.randomlygoing_counter_in + 1
+        rospy.loginfo('Executing state NORMAL (users = %f)'%userdata.normal_counter_in)
+        userdata.normal_counter_out = userdata.normal_counter_in + 1
 	
         
     
@@ -256,6 +279,8 @@ class Sleeping(smach.State):
                              input_keys=['sleeping_counter_in'],
                              output_keys=['sleeping_counter_out'])
         
+        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        
     def execute(self, userdata):
         
         """! Sleeping state execution 
@@ -264,9 +289,12 @@ class Sleeping(smach.State):
         @return the user_action
         """
     
-        global desired_position_sleep_ ,desired_orientation_sleep_
+        global desired_position_sleep_ ,desired_orientation_sleep_,GoDetection
         
         print('I am moving to home : ', desired_position_sleep_)
+        time.sleep(2)
+        GoDetection = 0
+        self.pub_state.publish(state_normal)
 
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         client.wait_for_server()
@@ -297,17 +325,129 @@ class Playing(smach.State):
     """! Define the Playing state  """
     def __init__(self):
         smach.State.__init__(self, 
-			                 outcomes=['sleep'],
+			                 outcomes=['sleep','find'],
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
-       
+        self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
+        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        
     def execute(self, userdata):
         """! Playing state execution 
         @section Description
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-       
+        global command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection
+        
+        print('I am moving to the user : ', person_position)
+
+        time.sleep(2)
+        GoDetection = 0
+        self.pub_state.publish(GoDetection)
+
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = person_position.x
+        goal.target_pose.pose.position.y = person_position.y
+        goal.target_pose.pose.orientation.w = 1
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+
+        print("waiting for the command")
+        print("command received: ", command_play)
+        desired_location = command_play.location
+        play_coordinates = Point()
+        room = ' '
+        if desired_location == room1.location:
+                print(room1.known)
+                if room1.known != False:
+                        print ('I got the location coordinates!!')
+                        room = room1.location
+                        play_coordinates.x = room1.x
+                        play_coordinates.y = room1.y
+                else :
+                        print('devo andare in un altro stato')
+                        return('find')
+               
+
+
+        elif desired_location == room2.location:
+
+                if room2.x != 0 and room2.y != 0 :
+                        print ('I got the location coordinates!!')
+                        room = room2.location
+                        play_coordinates.x = room2.x
+                        play_coordinates.y = room2.y
+                else :
+                        print('devo andare in un altro stato')
+                
+                
+
+        elif desired_location ==room3.location:
+
+                if room3.x != 0 and room3.y != 0 :
+                        print ('I got the location coordinates!!')
+                        room = room3.location
+                        play_coordinates.x = room3.x
+                        play_coordinates.y = room3.y
+                else :
+                        print('devo andare in un altro stato')
+                 
+
+
+        elif desired_location == room4.location:
+
+                if room4.x != 0 and room4.y != 0 :
+                        print ('I got the location coordinates!!')
+                        room = room4.location
+                        play_coordinates.x = room4.x
+                        play_coordinates.y = room4.y
+                else :
+                        print('devo andare in un altro stato')
+                
+
+        elif desired_location == room5.location:
+
+                if room5.x != 0 and room5.y != 0 :
+                        print ('I got the location coordinates!!')
+                        room = room5.location
+                        play_coordinates.x = room5.x
+                        play_coordinates.y = room5.y
+                else :
+                        print('devo andare in un altro stato')
+                
+
+        elif desired_location == room6.location:
+
+                if room6.x != 0 and room6.y != 0 :
+                        print ('I got the location coordinates!!')
+                        room = room6.location
+                        play_coordinates.x = room6.x
+                        play_coordinates.y = room6.y
+                else :
+                        print('devo andare in un altro stato')
+
+        print('I am moving to  : ', room, play_coordinates)
+
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = play_coordinates.x
+        goal.target_pose.pose.position.y = play_coordinates.y
+        goal.target_pose.pose.orientation.w = 1
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+
+
         return ('sleep')    
 
         
@@ -315,7 +455,36 @@ class Playing(smach.State):
         userdata.playing_counter_out = userdata.playing_counter_in + 1
 	
         
+class Find(smach.State):
+    """! Define the Find state  """
+    def __init__(self):
+	
 
+        smach.State.__init__(self, 
+			                 outcomes=['normal'],
+                             input_keys=['find_counter_in'],
+                             output_keys=['find_counter_out'])
+        
+        self.pub_state = rospy.Publisher('/state_fsm', Float64, queue_size=10)
+        
+    def execute(self, userdata):
+        
+        """! Sleeping state execution 
+        @section Description
+        In this state the home position is sent trough an action client to the server that makes the robot move toward the goal position
+        @return the user_action
+        """
+        global GoDetection
+        print('-----------FIND-------------------')
+        time.sleep(2)
+        GoDetection = 1
+        self.pub_state.publish(GoDetection)
+        return('normal')
+   	
+	
+        rospy.loginfo('Executing state FIND (users = %f)'%userdata.find_counter_in)
+        userdata.find_counter_out = userdata.find_counter_in + 1
+	
 
         
 def main():
@@ -329,13 +498,13 @@ def main():
     # Open the container
     with sm:
         # Add states to the container
-        smach.StateMachine.add('RANDOMLYGOING', RandomlyGoing(), 
-                               transitions={'normal':'RANDOMLYGOING','play':'PLAYING'},
-                               remapping={'randomlygoing_counter_in':'sm_counter', 
-                                          'randomlygoing_counter_out':'sm_counter'})
+        smach.StateMachine.add('NORMAL', Normal(), 
+                               transitions={'normal':'NORMAL','play':'PLAYING'},
+                               remapping={'normal_counter_in':'sm_counter', 
+                                          'normal_counter_out':'sm_counter'})
 
         smach.StateMachine.add('PLAYING', Playing(), 
-                               transitions={'sleep':'SLEEPING'
+                               transitions={'sleep':'SLEEPING','find':'FIND'
 					    },
                                             
 							
@@ -347,10 +516,17 @@ def main():
         
        
         smach.StateMachine.add('SLEEPING', Sleeping(), 
-                               transitions={'normal':'RANDOMLYGOING'},
+                               transitions={'normal':'NORMAL'},
 
                                remapping={'sleeping_counter_in':'sm_counter',
                                           'sleeping_counter_out':'sm_counter'})
+        
+        smach.StateMachine.add('FIND', Find(), 
+                               transitions={'normal':'NORMAL'},
+
+                               remapping={'find_counter_in':'sm_counter',
+                                          'find_counter_out':'sm_counter'})
+
 
         
 
