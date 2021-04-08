@@ -45,8 +45,8 @@ from geometry_msgs.msg import Quaternion
 
 ## Coordinates of the home position in the sleep state and of the orientation
 desired_position_sleep_ = Point()
-desired_position_sleep_.x = -5
-desired_position_sleep_.y = 8
+desired_position_sleep_.x = 0
+desired_position_sleep_.y = 0
 
 desired_orientation_sleep_ = Quaternion()
 desired_orientation_sleep_.w = 1
@@ -226,9 +226,9 @@ class Normal(smach.State):
         F.x = 4
         F.y = -7
         points = [A,B,C,D,E,F]
-        #desired_position_normal_= random.choice(points)
-        desired_position_normal_.x = A.x
-        desired_position_normal_.y = A.y
+        desired_position_normal_= random.choice(points)
+        #desired_position_normal_.x = A.x
+        #desired_position_normal_.y = A.y
         
         desired_orientation_normal_.w = 1
 
@@ -256,7 +256,7 @@ class Normal(smach.State):
         
 
         print('I am arrived! ')
-        self.sub.unregister()
+        #self.sub.unregister()
         return user_action()
                 
         # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
@@ -313,7 +313,7 @@ class Sleeping(smach.State):
         
         print('I am arrived home ')
         #time.sleep(5)
-        return ('normal')
+        return random.choice('normal','sleep')
    	
 	
         rospy.loginfo('Executing state SLEEPING (users = %f)'%userdata.sleeping_counter_in)
@@ -327,7 +327,7 @@ class Playing(smach.State):
     """! Define the Playing state  """
     def __init__(self):
         smach.State.__init__(self, 
-			                 outcomes=['sleep','find','play'],
+			                 outcomes=['sleep','find','play','normal'],
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
         #self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
@@ -340,10 +340,10 @@ class Playing(smach.State):
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-        global command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
+        global flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
         
         print('I am moving to the user : ', person_position)
-
+        flag_play = False
         time.sleep(2)
         GoDetection = False
         self.pub_state.publish(GoDetection)
@@ -368,23 +368,23 @@ class Playing(smach.State):
         
         play_coordinates = Point()
         room = ' '
-        GoSleep = False
+        GoNormal = False
         if command_play.go != 'GoTo' :
                 t_end = time.time() + 20 
                 while time.time() < t_end :
                         
                         
-                        goSleep = True
+                        GoNormal  = True
                         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
                         if command_play.go == 'GoTo' :
                                 print('I have received a command!')
                                 print(command_play)
-                                goSleep = False
+                                GoNormal  = False
                                 break
                         
-                if GoSleep :
+                if GoNormal :
                         print('no GoTo command received!')
-                        return ('sleep')
+                        return ('normal')
 
         desired_location = command_play.location
         if desired_location == room1.location:
@@ -395,6 +395,7 @@ class Playing(smach.State):
                         play_coordinates.x = room1.x
                         play_coordinates.y = room1.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
                         return('find')
                
@@ -408,7 +409,9 @@ class Playing(smach.State):
                         play_coordinates.x = room2.x
                         play_coordinates.y = room2.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
+                        return('find')
                 
                 
 
@@ -420,7 +423,9 @@ class Playing(smach.State):
                         play_coordinates.x = room3.x
                         play_coordinates.y = room3.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
+                        return('find')
                  
 
 
@@ -432,8 +437,9 @@ class Playing(smach.State):
                         play_coordinates.x = room4.x
                         play_coordinates.y = room4.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
-                
+                        return('find')
 
         elif desired_location == room5.location:
 
@@ -443,7 +449,9 @@ class Playing(smach.State):
                         play_coordinates.x = room5.x
                         play_coordinates.y = room5.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
+                        return('find')
                 
 
         elif desired_location == room6.location:
@@ -454,7 +462,9 @@ class Playing(smach.State):
                         play_coordinates.x = room6.x
                         play_coordinates.y = room6.y
                 else :
+                        command_play = command()
                         print('devo andare in un altro stato')
+                        return('find')
 
         print('I am moving to  : ', room, play_coordinates)
 
@@ -532,7 +542,7 @@ def main():
                                           'normal_counter_out':'sm_counter'})
 
         smach.StateMachine.add('PLAYING', Playing(), 
-                               transitions={'sleep':'SLEEPING','find':'FIND','play':'PLAYING'
+                               transitions={'sleep':'SLEEPING','find':'FIND','play':'PLAYING','normal':'NORMAL'
 					    },
                                             
 							
