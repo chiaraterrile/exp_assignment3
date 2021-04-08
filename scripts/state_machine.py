@@ -54,6 +54,7 @@ desired_orientation_sleep_.w = 1
 person_position = Point()
 person_position.x = -5
 person_position.y = 8
+person_orientation = -1.57
 
 GoDetection = False
 
@@ -225,9 +226,9 @@ class Normal(smach.State):
         F.x = 4
         F.y = -7
         points = [A,B,C,D,E,F]
-        desired_position_normal_= random.choice(points)
-        #desired_position_normal_.x = A.x
-        #desired_position_normal_.y = A.y
+        #desired_position_normal_= random.choice(points)
+        desired_position_normal_.x = A.x
+        desired_position_normal_.y = A.y
         
         desired_orientation_normal_.w = 1
 
@@ -281,6 +282,7 @@ class Sleeping(smach.State):
         
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
+        
     def execute(self, userdata):
         
         """! Sleeping state execution 
@@ -294,7 +296,7 @@ class Sleeping(smach.State):
         print('I am moving to home : ', desired_position_sleep_)
         time.sleep(2)
         GoDetection = False
-        self.pub_state.publish(state_normal)
+        self.pub_state.publish(GoDetection)
 
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         client.wait_for_server()
@@ -325,11 +327,12 @@ class Playing(smach.State):
     """! Define the Playing state  """
     def __init__(self):
         smach.State.__init__(self, 
-			                 outcomes=['sleep','find'],
+			                 outcomes=['sleep','find','play'],
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
-        self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
+        #self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
+        #self.pub_wait_command =  rospy.Publisher('/wait_command', Bool, queue_size=10)
         
     def execute(self, userdata):
         """! Playing state execution 
@@ -337,7 +340,7 @@ class Playing(smach.State):
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-        global command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection
+        global command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
         
         print('I am moving to the user : ', person_position)
 
@@ -353,16 +356,37 @@ class Playing(smach.State):
         goal.target_pose.header.stamp = rospy.Time.now()
         goal.target_pose.pose.position.x = person_position.x
         goal.target_pose.pose.position.y = person_position.y
-        goal.target_pose.pose.orientation.w = 1
+        goal.target_pose.pose.orientation.w = person_orientation
 
         client.send_goal(goal)
         wait = client.wait_for_result()
 
-        print("waiting for the command")
-        print("command received: ", command_play)
-        desired_location = command_play.location
+        print('I am here, I am waiting for the command!!')
+
+        sub_go = rospy.Subscriber('/play_command', command, clbk_go)
+        #print("command received: ", command_play)
+        
         play_coordinates = Point()
         room = ' '
+        GoSleep = False
+        if command_play.go != 'GoTo' :
+                t_end = time.time() + 20 
+                while time.time() < t_end :
+                        
+                        
+                        goSleep = True
+                        sub_go = rospy.Subscriber('/play_command', command, clbk_go)
+                        if command_play.go == 'GoTo' :
+                                print('I have received a command!')
+                                print(command_play)
+                                goSleep = False
+                                break
+                        
+                if GoSleep :
+                        print('no GoTo command received!')
+                        return ('sleep')
+
+        desired_location = command_play.location
         if desired_location == room1.location:
                 print(room1.known)
                 if room1.known != False:
@@ -447,8 +471,12 @@ class Playing(smach.State):
         client.send_goal(goal)
         wait = client.wait_for_result()
 
+        command_play = command()
+        
+        return('play') 
 
-        return ('sleep')    
+
+           
 
         
         rospy.loginfo('Executing state PLAYING (users = %f)'%userdata.playing_counter_in)
@@ -504,7 +532,7 @@ def main():
                                           'normal_counter_out':'sm_counter'})
 
         smach.StateMachine.add('PLAYING', Playing(), 
-                               transitions={'sleep':'SLEEPING','find':'FIND'
+                               transitions={'sleep':'SLEEPING','find':'FIND','play':'PLAYING'
 					    },
                                             
 							

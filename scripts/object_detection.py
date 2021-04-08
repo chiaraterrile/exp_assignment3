@@ -95,12 +95,12 @@ class image_feature:
         np_arr = np.fromstring(ros_data.data, np.uint8)
         image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
-        print('################',GoDetection)
+        #print('I am not looking for objects...')
         
 
         if GoDetection  :
 
-            print('sono entrato')
+            #print('Looking for new object to detect')
         
             greenLower = (50, 50, 50)
             greenUpper = (70, 255, 255)
@@ -168,12 +168,11 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('green object')
                 # only proceed if the radius meets a minimum size
                 if green_detected != True  :
                     det = True
                     pub_detection.publish(det)
-                    print('---------------------- mi avvicino')
+                    print('I am getting closer to the green object')
                     if radius > 10:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -212,12 +211,11 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('blue object')
                 # only proceed if the radius meets a minimum size 
                 if blue_detected != True  :
                     det = True
-                    print('---------------------- mi avvicino')
                     pub_detection.publish(det)
+                    print('I am getting closer to the blue object')
                     if radius > 10:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -260,10 +258,9 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('red object')
                 # only proceed if the radius meets a minimum size
                 if red_detected != True :
-                    print('---------------------- mi avvicino')
+                    print('I am getting closer to the red object')
                     det = True
                     pub_detection.publish(det)
                     if radius > 10:
@@ -306,10 +303,9 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('black object')
                 # only proceed if the radius meets a minimum size
                 if black_detected != True :
-                    print('---------------------- mi avvicino')
+                    print('I am getting closer to the black object')
                     det = True
                     pub_detection.publish(det)
                     if radius > 10:
@@ -351,13 +347,12 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('magenta object')
                 # only proceed if the radius meets a minimum size
                 if magenta_detected != True  :
 
                     det = True
                     pub_detection.publish(det)
-                    print('---------------------- mi avvicino')
+                    print('I am getting closer to the magenta object')
                     if radius > 10:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -397,13 +392,12 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                print ('yellow object')
                 # only proceed if the radius meets a minimum size
                 if yellow_detected != True :
 
                     det = True
                     pub_detection.publish(det)
-                    print('---------------------- mi avvicino')
+                    print('I am getting closer to the yellow object')
                     if radius > 10:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points

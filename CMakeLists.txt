@@ -188,6 +188,8 @@ install(PROGRAMS
    scripts/client_move.py
    scripts/state_machine.py
    scripts/object_detection.py
+   scripts/play.py
+   scripts/GoTo.py
    
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
