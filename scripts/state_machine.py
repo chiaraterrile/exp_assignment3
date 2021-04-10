@@ -10,6 +10,8 @@ This scripts is a ROS node that implements a FSM that according to what detects 
 
 # Imports
 import roslib
+import roslaunch
+import os
 from std_msgs.msg import Bool
 from exp_assignment3.msg import ball
 from exp_assignment3.msg import command
@@ -403,7 +405,7 @@ class Playing(smach.State):
 
         elif desired_location == room2.location:
 
-                if room2.x != 0 and room2.y != 0 :
+                if room2.known != False:
                         print ('I got the location coordinates!!')
                         room = room2.location
                         play_coordinates.x = room2.x
@@ -417,7 +419,7 @@ class Playing(smach.State):
 
         elif desired_location ==room3.location:
 
-                if room3.x != 0 and room3.y != 0 :
+                if room3.known != False:
                         print ('I got the location coordinates!!')
                         room = room3.location
                         play_coordinates.x = room3.x
@@ -431,7 +433,7 @@ class Playing(smach.State):
 
         elif desired_location == room4.location:
 
-                if room4.x != 0 and room4.y != 0 :
+                if room4.known != False :
                         print ('I got the location coordinates!!')
                         room = room4.location
                         play_coordinates.x = room4.x
@@ -443,7 +445,7 @@ class Playing(smach.State):
 
         elif desired_location == room5.location:
 
-                if room5.x != 0 and room5.y != 0 :
+                if room5.known != False :
                         print ('I got the location coordinates!!')
                         room = room5.location
                         play_coordinates.x = room5.x
@@ -456,7 +458,7 @@ class Playing(smach.State):
 
         elif desired_location == room6.location:
 
-                if room6.x != 0 and room6.y != 0 :
+                if room6.known != False :
                         print ('I got the location coordinates!!')
                         room = room6.location
                         play_coordinates.x = room6.x
@@ -517,6 +519,9 @@ class Find(smach.State):
         time.sleep(2)
         GoDetection = True
         self.pub_state.publish(GoDetection)
+
+        os.system("roslaunch explore_lite explore.launch")
+
         return('normal')
    	
 	
