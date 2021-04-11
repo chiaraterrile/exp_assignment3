@@ -12,6 +12,8 @@ This scripts is a ROS node that implements a FSM that according to what detects 
 import roslib
 import roslaunch
 import os
+import subprocess
+import signal
 from std_msgs.msg import Bool
 from exp_assignment3.msg import ball
 from exp_assignment3.msg import command
@@ -59,6 +61,11 @@ person_position.y = 8
 person_orientation = -1.57
 
 GoDetection = False
+OpenTerminal = True
+desired_location =' '
+child = None 
+
+FindState = False
 
 class Room:
     "A structure that can have any fields defined."
@@ -81,6 +88,8 @@ command_play = command()
 
 det = False    
 flag_play = False 
+FoundLocation = False
+room_track = Room()
 # FMS functions
 def clbk_play(msg):
     global flag_play
@@ -98,12 +107,13 @@ def clbk_go(msg):
     #print (command_play)
 
 def clbk_ball_info(msg):
-        global ball_info
-        global det,ball,coord,room1,room2,room3,room4,room5,room6,ball_info
+        
+        global OpenTerminal,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
 
         ball_info.x = msg.x
         ball_info.y = msg.y
         ball_info.color = msg.color
+        room = ' '
         #print(ball_info)
         color_found = ball_info.color
         #print(color_found)
@@ -113,6 +123,7 @@ def clbk_ball_info(msg):
                 room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
+                room_track = room1
 
 
         elif color_found == room2.color:
@@ -120,6 +131,7 @@ def clbk_ball_info(msg):
                 room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det =  False
+                room_track = room2
                 
 
         elif color_found ==room3.color:
@@ -127,6 +139,7 @@ def clbk_ball_info(msg):
                 room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
+                room_track = room3
 
 
         elif color_found == room4.color:
@@ -134,25 +147,52 @@ def clbk_ball_info(msg):
                 room4 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
+                room_track = room4
 
         elif color_found == room5.color:
                 print ('Found ',room5.location)
                 room5 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
+                room_track = room5
 
         elif color_found == room6.color:
                 print ('Found ',room6.location)
                 room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
                 det = False 
+                room_track = room6
+
+        if FindState :
+                if desired_location == room_track.location :
+                        print('I have found the desired location!')
+                        #pub = rospy.Publisher('/move_base/cancel_all_goals', GoalID, queue_size=10)
+                        #canc = GoalID ()
+                        #pub.publish(canc)
+                        
+                        #child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
+                        #child.terminate()
+                        
+                        #return('play')
+                        FoundLocation = True
+                        #os.system(" ^C")
+                elif desired_location != room_track.location:
+                        print('The room found is not the desired one!')
+                        #return('find')
+                        FoundLocation = False
+                        OpenTerminal = True
+        
+        
+
 
 
 def clbk_track(msg):
-        global det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+        global FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
         det = msg
 
         if det != False :
+            if FindState :
+                    child.send_signal(signal.SIGINT)
             print ('############ Substate TRACK ##############')
    
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
@@ -342,7 +382,7 @@ class Playing(smach.State):
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-        global flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
+        global OpenTerminal,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
         
         print('I am moving to the user : ', person_position)
         flag_play = False
@@ -362,6 +402,8 @@ class Playing(smach.State):
 
         client.send_goal(goal)
         wait = client.wait_for_result()
+
+        command_play = command()
 
         print('I am here, I am waiting for the command!!')
 
@@ -399,6 +441,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        OpenTerminal = True
                         return('find')
                
 
@@ -501,11 +544,12 @@ class Find(smach.State):
 	
 
         smach.State.__init__(self, 
-			                 outcomes=['normal'],
+			                 outcomes=['normal','find','play'],
                              input_keys=['find_counter_in'],
                              output_keys=['find_counter_out'])
         
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
+        self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
         
     def execute(self, userdata):
         
@@ -514,15 +558,24 @@ class Find(smach.State):
         In this state the home position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global GoDetection
+        global child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,OpenTerminal,process
         print('-----------FIND-------------------')
         time.sleep(2)
         GoDetection = True
+        
+        FindState = True
         self.pub_state.publish(GoDetection)
+        
+        if OpenTerminal :
+                OpenTerminal = False
+               # os.system("gnome-terminal -x roslaunch explore_lite explore.launch")
+                child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
 
-        os.system("roslaunch explore_lite explore.launch")
-
-        return('normal')
+        print(FoundLocation)
+        if FoundLocation :
+                return ('play')
+        
+        return('find')
    	
 	
         rospy.loginfo('Executing state FIND (users = %f)'%userdata.find_counter_in)
@@ -565,7 +618,7 @@ def main():
                                           'sleeping_counter_out':'sm_counter'})
         
         smach.StateMachine.add('FIND', Find(), 
-                               transitions={'normal':'NORMAL'},
+                               transitions={'normal':'NORMAL','find':'FIND','play':'PLAYING'},
 
                                remapping={'find_counter_in':'sm_counter',
                                           'find_counter_out':'sm_counter'})
