@@ -40,7 +40,7 @@ def GoTo():
     msg = command()
  
     msg.go = 'GoTo'
-    msg.location = 'entrance'
+    msg.location = 'living room'
     pub_command.publish(msg)
    
 if __name__ == '__main__':

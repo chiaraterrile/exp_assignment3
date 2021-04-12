@@ -61,11 +61,12 @@ person_position.y = 8
 person_orientation = -1.57
 
 GoDetection = False
-OpenTerminal = True
+LaunchExploration = True
 desired_location =' '
 child = None 
 
 FindState = False
+t_final = None 
 
 class Room:
     "A structure that can have any fields defined."
@@ -108,7 +109,7 @@ def clbk_go(msg):
 
 def clbk_ball_info(msg):
         
-        global OpenTerminal,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
+        global t_final,LaunchExploration,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
 
         ball_info.x = msg.x
         ball_info.y = msg.y
@@ -180,19 +181,22 @@ def clbk_ball_info(msg):
                         print('The room found is not the desired one!')
                         #return('find')
                         FoundLocation = False
-                        OpenTerminal = True
+                        LaunchExploration = True
         
         
 
 
 
 def clbk_track(msg):
-        global FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+        global t_final,FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
         det = msg
 
         if det != False :
             if FindState :
                     child.send_signal(signal.SIGINT)
+                    #child.terminate()
+                    t_final = time.time() + 10
+                    print('azzero il timer')
             print ('############ Substate TRACK ##############')
    
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
@@ -382,7 +386,7 @@ class Playing(smach.State):
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-        global OpenTerminal,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
+        global LaunchExploration,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
         
         print('I am moving to the user : ', person_position)
         flag_play = False
@@ -431,6 +435,7 @@ class Playing(smach.State):
                         return ('normal')
 
         desired_location = command_play.location
+        
         if desired_location == room1.location:
                 print(room1.known)
                 if room1.known != False:
@@ -441,7 +446,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
-                        OpenTerminal = True
+                        LaunchExploration = True
                         return('find')
                
 
@@ -456,12 +461,13 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        LaunchExploration = True
                         return('find')
                 
                 
 
-        elif desired_location ==room3.location:
-
+        elif desired_location == room3.location:
+                
                 if room3.known != False:
                         print ('I got the location coordinates!!')
                         room = room3.location
@@ -470,6 +476,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        LaunchExploration = True
                         return('find')
                  
 
@@ -484,6 +491,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        LaunchExploration = True
                         return('find')
 
         elif desired_location == room5.location:
@@ -496,6 +504,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        LaunchExploration = True
                         return('find')
                 
 
@@ -509,6 +518,7 @@ class Playing(smach.State):
                 else :
                         command_play = command()
                         print('devo andare in un altro stato')
+                        LaunchExploration = True
                         return('find')
 
         print('I am moving to  : ', room, play_coordinates)
@@ -558,21 +568,33 @@ class Find(smach.State):
         In this state the home position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,OpenTerminal,process
-        print('-----------FIND-------------------')
+        global t_final,child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
+        print('I am looking for the location!')
         time.sleep(2)
         GoDetection = True
         
         FindState = True
         self.pub_state.publish(GoDetection)
         
-        if OpenTerminal :
-                OpenTerminal = False
+        if LaunchExploration :
+                LaunchExploration = False
                # os.system("gnome-terminal -x roslaunch explore_lite explore.launch")
+                #child = subprocess.Popen(["gnome-terminal","-x","roslaunch","explore_lite","explore.launch"])
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
+                #child = subprocess.run(["lxterminal","-e","roslaunch","explore_lite","explore.launch"])
+                t_final = time.time() + 10 
 
-        print(FoundLocation)
+        
+        if time.time() > t_final :
+                print('Cannot found the ball, try again!!')
+                child.send_signal(signal.SIGINT)
+               # child.terminate()
+                FindState = False 
+                return ('play')
+
+        #print(FoundLocation)
         if FoundLocation :
+                FindState = False 
                 return ('play')
         
         return('find')
