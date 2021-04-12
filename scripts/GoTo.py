@@ -40,7 +40,11 @@ def GoTo():
     msg = command()
  
     msg.go = 'GoTo'
-    msg.location = 'living room'
+    #print('Where do you wanna go?')
+    loc = raw_input('Where do you wanna go? ')
+    #msg.location = 'living room'
+    msg.location = loc
+    print(msg.location)
     pub_command.publish(msg)
    
 if __name__ == '__main__':

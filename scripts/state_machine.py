@@ -195,8 +195,8 @@ def clbk_track(msg):
             if FindState :
                     child.send_signal(signal.SIGINT)
                     #child.terminate()
-                    t_final = time.time() + 10
-                    print('azzero il timer')
+                    t_final = time.time() + 120
+                    
             print ('############ Substate TRACK ##############')
    
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
@@ -582,7 +582,7 @@ class Find(smach.State):
                 #child = subprocess.Popen(["gnome-terminal","-x","roslaunch","explore_lite","explore.launch"])
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
                 #child = subprocess.run(["lxterminal","-e","roslaunch","explore_lite","explore.launch"])
-                t_final = time.time() + 10 
+                t_final = time.time() + 120 
 
         
         if time.time() > t_final :
