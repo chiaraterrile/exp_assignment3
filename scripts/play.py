@@ -40,6 +40,8 @@ def play_command():
    # while not rospy.is_shutdown():
     play_go = True
     pub.publish(play_go)
+    pub_command= rospy.Publisher('play_command', command, queue_size=10)
+    
    
 
 if __name__ == '__main__':

@@ -117,6 +117,10 @@ class image_feature:
             magentaLower = (125, 50, 50) 
             magentaUpper = (150, 255, 255)
 
+            #magentaLower = (100, 50, 50) 
+            #magentaUpper = (200, 255, 255)
+
+
             yellowLower = (25, 50, 50) 
             yellowUpper = (35, 255, 255)
 
@@ -368,7 +372,6 @@ class image_feature:
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'magenta' 
-
                             pub_ball.publish(ball_info)
                             print('published!')
                             time.sleep(5)

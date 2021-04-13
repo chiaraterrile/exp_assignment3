@@ -48,6 +48,7 @@ from geometry_msgs.msg import Quaternion
 # Global variables
 
 ## Coordinates of the home position in the sleep state and of the orientation
+desired_position_normal_ = Point()
 desired_position_sleep_ = Point()
 desired_position_sleep_.x = 0
 desired_position_sleep_.y = 0
@@ -110,7 +111,7 @@ def clbk_go(msg):
 def clbk_ball_info(msg):
         
         global t_final,LaunchExploration,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
-
+        
         ball_info.x = msg.x
         ball_info.y = msg.y
         ball_info.color = msg.color
@@ -122,6 +123,7 @@ def clbk_ball_info(msg):
         if color_found == room1.color:
                 print ('Found ',room1.location)
                 room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
+                print(room1.x , room1.y)
                 ball_info = ball()
                 det = False 
                 room_track = room1
@@ -130,6 +132,7 @@ def clbk_ball_info(msg):
         elif color_found == room2.color:
                 print ('Found ',room2.location)
                 room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
+                print(room2.x , room2.y)
                 ball_info = ball()
                 det =  False
                 room_track = room2
@@ -138,28 +141,33 @@ def clbk_ball_info(msg):
         elif color_found ==room3.color:
                 print ('Found ',room3.location)
                 room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
+                print(room3.x , room3.y)
                 ball_info = ball()
                 det = False 
                 room_track = room3
 
-
         elif color_found == room4.color:
                 print ('Found ',room4.location)
-                room4 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
+                room5 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
+                print(room4.x , room4.y)
                 ball_info = ball()
                 det = False 
                 room_track = room4
 
         elif color_found == room5.color:
                 print ('Found ',room5.location)
-                room5 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
+                room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
+                print(room5.x , room5.y)
                 ball_info = ball()
                 det = False 
                 room_track = room5
 
+        
+
         elif color_found == room6.color:
                 print ('Found ',room6.location)
                 room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
+                print(room6.x , room6.y)
                 ball_info = ball()
                 det = False 
                 room_track = room6
@@ -183,14 +191,15 @@ def clbk_ball_info(msg):
                         FoundLocation = False
                         LaunchExploration = True
         
-        
+        else :
+                        print('I am moving to random position : ', desired_position_normal_)
 
 
 
 def clbk_track(msg):
-        global t_final,FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+        global desired_position_normal_,t_final,FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
         det = msg
-
+       
         if det != False :
             if FindState :
                     child.send_signal(signal.SIGINT)
@@ -198,8 +207,10 @@ def clbk_track(msg):
                     t_final = time.time() + 120
                     
             print ('############ Substate TRACK ##############')
-   
+            
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
+        
+                
        
 
 
@@ -241,7 +252,7 @@ class Normal(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
+        global desired_position_normal_,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
         
         
         #pub_state = rospy.Publisher('/state_fsm', String, queue_size=10)
@@ -255,27 +266,29 @@ class Normal(smach.State):
         
         A= Point ()
         A.x = -1
-        A.y = 8
+        A.y = 6
         B = Point()  
         B.x = -4
         B.y = 2
         C = Point()  
         C.x = -3
-        C.y = -3
+        C.y = -4
         D = Point()  
         D.x = 4
         D.y = 0
         E = Point()  
-        E.x = 4
+        E.x = 3
         E.y = -4
         F = Point()  
         F.x = 4
         F.y = -7
         points = [A,B,C,D,E,F]
+        #points = [C,A]
         desired_position_normal_= random.choice(points)
         #desired_position_normal_.x = A.x
         #desired_position_normal_.y = A.y
-        
+       # desired_position_normal_.x = E.x
+        #desired_position_normal_.y = E.y
         desired_orientation_normal_.w = 1
 
         print('I am moving to random position : ', desired_position_normal_)
