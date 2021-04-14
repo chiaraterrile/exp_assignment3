@@ -177,17 +177,18 @@ class image_feature:
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the green object')
-                    if radius > 10:
+                    print('---------',radius)
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-
+                        print('++++++++++++',vel.linear.x)
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -220,17 +221,18 @@ class image_feature:
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the blue object')
-                    if radius > 10:
+                    print('---------',radius)
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-
+                        print('++++++++++++',vel.linear.x)
                         if vel.linear.x < 0.1 :
                         
                             ball_info.x = ball_pos.x
@@ -265,19 +267,20 @@ class image_feature:
                 # only proceed if the radius meets a minimum size
                 if red_detected != True :
                     print('I am getting closer to the red object')
+                    print('---------',radius)
                     det = True
                     pub_detection.publish(det)
-                    if radius > 10:
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-
+                        print('++++++++++++',vel.linear.x)
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -310,9 +313,10 @@ class image_feature:
                 # only proceed if the radius meets a minimum size
                 if black_detected != True :
                     print('I am getting closer to the black object')
+                    print('---------',radius)
                     det = True
                     pub_detection.publish(det)
-                    if radius > 10:
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -322,7 +326,7 @@ class image_feature:
                         vel.angular.z = -0.002*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-
+                        print('++++++++++++',vel.linear.x)
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -357,21 +361,24 @@ class image_feature:
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the magenta object')
-                    if radius > 10:
+                    print('---------',radius)
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
+                        print('++++++++++++',vel.linear.x)
 
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'magenta' 
+
                             pub_ball.publish(ball_info)
                             print('published!')
                             time.sleep(5)
@@ -401,16 +408,18 @@ class image_feature:
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the yellow object')
-                    if radius > 10:
+                    print('---------',radius)
+                    if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
+                        print('++++++++++++',vel.linear.x)
 
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x

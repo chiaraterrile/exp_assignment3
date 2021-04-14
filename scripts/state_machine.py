@@ -47,6 +47,7 @@ from geometry_msgs.msg import Quaternion
 
 # Global variables
 
+         
 ## Coordinates of the home position in the sleep state and of the orientation
 desired_position_normal_ = Point()
 desired_position_sleep_ = Point()
@@ -54,6 +55,8 @@ desired_position_sleep_.x = 0
 desired_position_sleep_.y = 0
 
 desired_orientation_sleep_ = Quaternion()
+desired_orientation_normal_ = Quaternion()
+
 desired_orientation_sleep_.w = 1
 
 person_position = Point()
@@ -79,6 +82,21 @@ room3 = Room(location = "living room",color="green",known = False)
 room4 = Room(location = "kitchen",color="yellow",known = False)
 room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
+
+
+desired_orientation_normal_.w = 1      
+
+def coordinates_generator():
+        global desired_position_normal_,desired_orientation_normal_
+        points = [(-1, 6), (-4, 2),(-3,-4),(4,0),(3,-4),(4,-7)]
+        couple= random.choice(points)
+        desired_position_normal_.x = couple[0]
+        desired_position_normal_.y = couple[1]
+
+        
+
+
+
 
 
 VERBOSE = False
@@ -148,7 +166,7 @@ def clbk_ball_info(msg):
 
         elif color_found == room4.color:
                 print ('Found ',room4.location)
-                room5 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
+                room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 print(room4.x , room4.y)
                 ball_info = ball()
                 det = False 
@@ -220,7 +238,7 @@ def user_action():
         if flag_play != False :
                 return ('play')
         else :
-                return ('normal')
+                return random.choice(['normal','sleep'])
         
 
 # define state Normal
@@ -252,45 +270,10 @@ class Normal(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global desired_position_normal_,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
-        
-        
-        #pub_state = rospy.Publisher('/state_fsm', String, queue_size=10)
-        #state_normal = 'normal'
-        
+        global desired_orientation_normal_,desired_position_normal_,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
-        desired_position_normal_ = Point()
-        desired_orientation_normal_ = Quaternion()
-
+        coordinates_generator()
         
-        
-        A= Point ()
-        A.x = -1
-        A.y = 6
-        B = Point()  
-        B.x = -4
-        B.y = 2
-        C = Point()  
-        C.x = -3
-        C.y = -4
-        D = Point()  
-        D.x = 4
-        D.y = 0
-        E = Point()  
-        E.x = 3
-        E.y = -4
-        F = Point()  
-        F.x = 4
-        F.y = -7
-        points = [A,B,C,D,E,F]
-        #points = [C,A]
-        desired_position_normal_= random.choice(points)
-        #desired_position_normal_.x = A.x
-        #desired_position_normal_.y = A.y
-       # desired_position_normal_.x = E.x
-        #desired_position_normal_.y = E.y
-        desired_orientation_normal_.w = 1
-
         print('I am moving to random position : ', desired_position_normal_)
         time.sleep(2)
         GoDetection = True
