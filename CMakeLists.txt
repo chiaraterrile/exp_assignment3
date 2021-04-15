@@ -202,6 +202,7 @@ install(PROGRAMS
    scripts/object_detection.py
    scripts/play.py
    scripts/GoTo.py
+scripts/test.py
    
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )

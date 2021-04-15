@@ -49,20 +49,8 @@ from geometry_msgs.msg import Quaternion
 
          
 ## Coordinates of the home position in the sleep state and of the orientation
-desired_position_normal_ = Point()
-desired_position_sleep_ = Point()
-desired_position_sleep_.x = 0
-desired_position_sleep_.y = 0
+#desired_position_normal= Point()
 
-desired_orientation_sleep_ = Quaternion()
-desired_orientation_normal_ = Quaternion()
-
-desired_orientation_sleep_.w = 1
-
-person_position = Point()
-person_position.x = -5
-person_position.y = 8
-person_orientation = -1.57
 
 GoDetection = False
 LaunchExploration = True
@@ -84,19 +72,24 @@ room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
 
 
-desired_orientation_normal_.w = 1      
-
 def coordinates_generator():
-        global desired_position_normal_,desired_orientation_normal_
+        desired_position_normal = Point()
         points = [(-1, 6), (-4, 2),(-3,-4),(4,0),(3,-4),(4,-7)]
         couple= random.choice(points)
-        desired_position_normal_.x = couple[0]
-        desired_position_normal_.y = couple[1]
+        desired_position_normal.x = couple[0]
+        desired_position_normal.y = couple[1]
+        return(desired_position_normal)
 
+class Coordinates :
+    sleep_xy = Point()
+    sleep_xy.x = 0
+    sleep_xy.y = 0
+    sleep_yaw = 1
+    user_xy = Point()
+    user_xy.x = -5
+    user_xy.y = 8
+    user_yaw = -1.57
         
-
-
-
 
 
 VERBOSE = False
@@ -125,6 +118,22 @@ def clbk_go(msg):
     global command_play
     command_play = msg
     #print (command_play)
+
+def Move(position,yaw):
+
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = position.x
+        goal.target_pose.pose.position.y = position.y
+        goal.target_pose.pose.orientation.w = yaw
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+
 
 def clbk_ball_info(msg):
         
@@ -193,24 +202,15 @@ def clbk_ball_info(msg):
         if FindState :
                 if desired_location == room_track.location :
                         print('I have found the desired location!')
-                        #pub = rospy.Publisher('/move_base/cancel_all_goals', GoalID, queue_size=10)
-                        #canc = GoalID ()
-                        #pub.publish(canc)
-                        
-                        #child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
-                        #child.terminate()
-                        
-                        #return('play')
                         FoundLocation = True
-                        #os.system(" ^C")
+
                 elif desired_location != room_track.location:
                         print('The room found is not the desired one!')
-                        #return('find')
                         FoundLocation = False
                         LaunchExploration = True
         
         else :
-                        print('I am moving to random position : ', desired_position_normal_)
+                        print('I am moving to random position : ', desired_position_normal)
 
 
 
@@ -248,8 +248,7 @@ class Normal(smach.State):
         
 	
         smach.State.__init__(self, 
-                             #outcomes=['sleep','normal','play'],
-                             outcomes=['normal','play'],
+                             outcomes=['sleep','normal','play'],
                              input_keys=['normal_counter_in'],
                              output_keys=['normal_counter_out'])
 
@@ -259,9 +258,6 @@ class Normal(smach.State):
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
         
-        #state = 'normal'
-        #self.pub_state.publish(state)
-        #print('xoxoxoxooxo')
     def execute(self, userdata):
     
         """! Normal state execution 
@@ -270,35 +266,19 @@ class Normal(smach.State):
         This goal position is sent trough an action client to the server that makes the robot move toward the goal position
         @return the user_action
         """
-        global desired_orientation_normal_,desired_position_normal_,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
+        global desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
-        coordinates_generator()
+        desired_position_normal = coordinates_generator()
+        desired_orientation_normal = 1
         
-        print('I am moving to random position : ', desired_position_normal_)
+        print('I am moving to random position : ', desired_position_normal)
         time.sleep(2)
         GoDetection = True
         self.pub_state.publish(GoDetection)
-        #self.pub_state.publish(state_normal)
-        print('published!!!')
 
-        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-        client.wait_for_server()
-
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
-        goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = desired_position_normal_.x
-        goal.target_pose.pose.position.y = desired_position_normal_.y
-        goal.target_pose.pose.orientation.w = desired_orientation_normal_.w
-
-        client.send_goal(goal)
-        wait = client.wait_for_result()
-
-        
-        
+        Move(desired_position_normal,desired_orientation_normal)
 
         print('I am arrived! ')
-        #self.sub.unregister()
         return user_action()
                 
         # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
@@ -333,29 +313,21 @@ class Sleeping(smach.State):
         @return the user_action
         """
     
-        global desired_position_sleep_ ,desired_orientation_sleep_,GoDetection
-        
-        print('I am moving to home : ', desired_position_sleep_)
+        global GoDetection
+        desired_position_sleep = Coordinates.sleep_xy
+        desired_orientation_sleep = Coordinates.sleep_yaw
+
+        print('I am moving to home : ', desired_position_sleep)
         time.sleep(2)
         GoDetection = False
         self.pub_state.publish(GoDetection)
 
-        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-        client.wait_for_server()
+        Move(desired_position_sleep,desired_orientation_sleep)
 
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
-        goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = desired_position_sleep_.x
-        goal.target_pose.pose.position.y = desired_position_sleep_.y
-        goal.target_pose.pose.orientation.w = desired_orientation_sleep_.w
-
-        client.send_goal(goal)
-        wait = client.wait_for_result()
-        
         print('I am arrived home ')
-        #time.sleep(5)
-        return random.choice('normal','sleep')
+
+        time.sleep(5)
+        return random.choice('normal')
    	
 	
         rospy.loginfo('Executing state SLEEPING (users = %f)'%userdata.sleeping_counter_in)
@@ -382,26 +354,18 @@ class Playing(smach.State):
         In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
         @return the normal state in case of absence of the ball
         """
-        global LaunchExploration,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,person_position,GoDetection,person_orientation
+        global LaunchExploration,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,GoDetection
         
+        person_position = Coordinates.user_xy
+        person_orientation = Coordinates.user_yaw
+
         print('I am moving to the user : ', person_position)
         flag_play = False
         time.sleep(2)
         GoDetection = False
         self.pub_state.publish(GoDetection)
 
-        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-        client.wait_for_server()
-
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
-        goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = person_position.x
-        goal.target_pose.pose.position.y = person_position.y
-        goal.target_pose.pose.orientation.w = person_orientation
-
-        client.send_goal(goal)
-        wait = client.wait_for_result()
+        Move(person_position,person_orientation)
 
         command_play = command()
 
@@ -584,7 +548,6 @@ class Find(smach.State):
         if time.time() > t_final :
                 print('Cannot found the ball, try again!!')
                 child.send_signal(signal.SIGINT)
-               # child.terminate()
                 FindState = False 
                 return ('play')
 
@@ -613,7 +576,7 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('NORMAL', Normal(), 
-                               transitions={'normal':'NORMAL','play':'PLAYING'},
+                               transitions={'normal':'NORMAL','play':'PLAYING','sleep':'SLEEPING'},
                                remapping={'normal_counter_in':'sm_counter', 
                                           'normal_counter_out':'sm_counter'})
 
