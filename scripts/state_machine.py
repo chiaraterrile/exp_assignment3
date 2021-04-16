@@ -45,25 +45,37 @@ from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Quaternion
 
-# Global variables
-
-         
-## Coordinates of the home position in the sleep state and of the orientation
-#desired_position_normal= Point()
-
-
-GoDetection = False
-LaunchExploration = True
-desired_location =' '
-child = None 
-
-FindState = False
-t_final = None 
-
 class Room:
-    "A structure that can have any fields defined."
+    """! This is class for storing informations about the rooms in the enviroment. """
     def __init__(self, **entries): self.__dict__.update(entries)
+    
+# Global flags
 
+## flag that indicates if is possible to go in the substate TRACK (set to true the only in state NORMAL or FIND)
+GoDetection = False 
+## flag that indicates if is possible to launch the explore_lite node (used to avoid the node to be continuosly launched when we are in the FIND state)
+LaunchExploration = True
+## flag that indicates if the robot is in the FIND state (used in the case of the substate TRACK to differentiate the behaviour from the normal state)
+FindState = False
+## flag that indicates if a new object has been detected if in NORMAL or FIND state
+det = False    
+## flag that indicates if a command 'play' has been given by the user
+flag_play = False 
+## flag that indicates that in the FIND state the desired location has been found
+FoundLocation = False
+
+# Global variables
+## variable that contains the desired location given by the GoTo command
+desired_location =' '
+## variable to run and stop the node explore_lite
+child = None 
+## variable that contains informations about the ball position (found during the object detection) and its color      
+ball_info = ball()
+## variable that contains the command given by the user ( GoTo command + desired location)
+command_play = command()
+## variable that contains informations (color, location, coordinates ...) about the object that the robot is tracking during the substate TRACK
+room_track = Room()
+## variables of the six rooms with their informations
 room1 = Room(location = "entrance",color="blue",known = False)
 room2 = Room(location = "closet",color="red",known = False)
 room3 = Room(location = "living room",color="green",known = False)
@@ -72,7 +84,14 @@ room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
 
 
+
+
+
+
+
+
 def coordinates_generator():
+        """! This function is used to generate the random coordinates for the NORMAL behaviour. (coordinates are chosen among several points that are in the map) """
         desired_position_normal = Point()
         points = [(-1, 6), (-4, 2),(-3,-4),(4,0),(3,-4),(4,-7)]
         couple= random.choice(points)
@@ -81,6 +100,7 @@ def coordinates_generator():
         return(desired_position_normal)
 
 class Coordinates :
+    """! This class contains the fixed positions for the SLEEP behaviour and of the user  """
     sleep_xy = Point()
     sleep_xy.x = 0
     sleep_xy.y = 0
@@ -90,37 +110,8 @@ class Coordinates :
     user_xy.y = 8
     user_yaw = -1.57
         
-
-
-VERBOSE = False
-
-# flag to indicate that a new ball has been detected
-
-ball_info = ball()
-command_play = command()
-
-det = False    
-flag_play = False 
-FoundLocation = False
-room_track = Room()
-# FMS functions
-def clbk_play(msg):
-    global flag_play
-    flag_play = msg
-    if flag_play != False :
-        pub = rospy.Publisher('/move_base/cancel', GoalID, queue_size=10)
-        canc = GoalID ()
-        pub.publish(canc)
-
-        #return ('play')
-
-def clbk_go(msg):
-    global command_play
-    command_play = msg
-    #print (command_play)
-
 def Move(position,yaw):
-
+        """!  This funcion implement the MoveBaseAction server having as input the desired location (x and y) and the orientation"""
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         client.wait_for_server()
 
@@ -135,17 +126,36 @@ def Move(position,yaw):
         wait = client.wait_for_result()
 
 
+VERBOSE = False
+
+
+def clbk_play(msg):
+    """! This callback is used to check whether or not a command play is received. If flag_play is set to true, the move_base action is cancelled"""
+    global flag_play
+    flag_play = msg
+    if flag_play :
+        pub = rospy.Publisher('/move_base/cancel', GoalID, queue_size=10)
+        canc = GoalID ()
+        pub.publish(canc)
+
+      
+def clbk_go(msg):
+    """! This callback is used to save the message sent by the user (the GoTo command)"""
+    global command_play
+    command_play = msg
+    
+
+
+
 def clbk_ball_info(msg):
-        
-        global t_final,LaunchExploration,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
+        """! This callback is used to save the informations received by the object_detection node """
+        global LaunchExploration,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
         
         ball_info.x = msg.x
         ball_info.y = msg.y
         ball_info.color = msg.color
         room = ' '
-        #print(ball_info)
         color_found = ball_info.color
-        #print(color_found)
 
         if color_found == room1.color:
                 print ('Found ',room1.location)
@@ -215,14 +225,13 @@ def clbk_ball_info(msg):
 
 
 def clbk_track(msg):
-        global desired_position_normal_,t_final,FindState,child,det,ball,coord,entrance,bedroom,bathroom,living_room,kitchen,closet,ball_info
+        """! This callback is used to check whether or not a new object has been detected by the object_detection. If this is true ( det = True) the robot goes in the substate TRACK and subscirbe to the topic /ball_info to get the coordinates and the color of the object """
+        global FindState,child,det
         det = msg
        
         if det != False :
             if FindState :
                     child.send_signal(signal.SIGINT)
-                    #child.terminate()
-                    t_final = time.time() + 120
                     
             print ('############ Substate TRACK ##############')
             
@@ -233,13 +242,14 @@ def clbk_track(msg):
 
 
 def user_action():
-	"""! this function controls the next state of the FSM  """
+	"""! this function controls the next state of the FSM (in the NORMAL state )according to the action of the user. If the flag_play is True the robot goes in the PLAY state."""
         global flag_play
-        if flag_play != False :
+        if flag_play :
                 return ('play')
         else :
                 return random.choice(['normal','sleep'])
         
+# FSM functions 
 
 # define state Normal
 class Normal(smach.State):
@@ -252,9 +262,11 @@ class Normal(smach.State):
                              input_keys=['normal_counter_in'],
                              output_keys=['normal_counter_out'])
 
-
+        ## subscriber to the topic /new_ball_detected, used to check wheter or not a ball has been detected by the object_detection node
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
+        ## subscriber to the topic /play, used to check wheter or not a command play has been received by the user
         self.sub_play = rospy.Subscriber('/play', Bool, clbk_play)
+        ## publisher to the topic /state_fsm, used to indicate if we are in a state that allows the substate TRACK (possible in NORMAL or FIND) or not
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
         
@@ -262,9 +274,9 @@ class Normal(smach.State):
     
         """! Normal state execution 
         @section Description
-        In this state is generated every time a new Point desired_position_normal_ in a radom way
-        This goal position is sent trough an action client to the server that makes the robot move toward the goal position
-        @return the user_action
+        In this state the robot goes in a random position in the map. This position is passed as input to the function Move() which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment.
+        In the mean time, subscribing to the topic /new_ball_detected, every time the flag det is set to True, the robot switches to the substate TRACK.
+        @return user_action
         """
         global desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
@@ -280,10 +292,7 @@ class Normal(smach.State):
 
         print('I am arrived! ')
         return user_action()
-                
-        # when a new ball is detected the robot switches in the substate Track where ut goes near the ball and stores informations about the ball position
-        
-        
+       
         
         rospy.loginfo('Executing state NORMAL (users = %f)'%userdata.normal_counter_in)
         userdata.normal_counter_out = userdata.normal_counter_in + 1
@@ -301,7 +310,8 @@ class Sleeping(smach.State):
 			                 outcomes=['normal'],
                              input_keys=['sleeping_counter_in'],
                              output_keys=['sleeping_counter_out'])
-        
+
+        ## publisher to the topic /state_fsm, used to indicate if we are in a state that allows the substate TRACK (possible in NORMAL or FIND) or not
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
         
         
@@ -309,8 +319,8 @@ class Sleeping(smach.State):
         
         """! Sleeping state execution 
         @section Description
-        In this state the home position is sent trough an action client to the server that makes the robot move toward the goal position
-        @return the user_action
+        In this state the robot goes in the sleeping position (fixed). This position is passed as input to the function Move() which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment.
+        @return normal
         """
     
         global GoDetection
@@ -344,15 +354,18 @@ class Playing(smach.State):
 			                 outcomes=['sleep','find','play','normal'],
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
-        #self.sub_go = rospy.Subscriber('/play_command', command, clbk_go)  
+        ## publisher to the topic /state_fsm, used to indicate if we are in a state that allows the substate TRACK (possible in NORMAL or FIND) or not
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
-        #self.pub_wait_command =  rospy.Publisher('/wait_command', Bool, queue_size=10)
+        
         
     def execute(self, userdata):
         """! Playing state execution 
         @section Description
-        In this state the robot tracks the ball until it is present, when it cannot detect the ball it returns to the normal state
-        @return the normal state in case of absence of the ball
+        In this state the robot goes to the user position and waits for a GoTo command by the user. It waits the command for a certain amount of time, if it is not received exits from the PLAY state. 
+        When a GoTo command is received, is checked if the location in the command is known. If it is known, the robot simply goes there, and then come back to the play state. ( so back to the user waiting for another GoTo command). 
+        If the location is unknown, the robot switches to the FIND behaviour. 
+
+        @return the normal state in case of absence of GoTo commands, play state when the desired location has been found, the find state when the location is unknown
         """
         global LaunchExploration,desired_location,flag_play,command_play,room1,room2,room3,room4,room5,room6,GoDetection
         
@@ -372,7 +385,6 @@ class Playing(smach.State):
         print('I am here, I am waiting for the command!!')
 
         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
-        #print("command received: ", command_play)
         
         play_coordinates = Point()
         room = ' '
@@ -380,7 +392,6 @@ class Playing(smach.State):
         if command_play.go != 'GoTo' :
                 t_end = time.time() + 20 
                 while time.time() < t_end :
-                        
                         
                         GoNormal  = True
                         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
@@ -517,18 +528,20 @@ class Find(smach.State):
 			                 outcomes=['normal','find','play'],
                              input_keys=['find_counter_in'],
                              output_keys=['find_counter_out'])
-        
+
+        ## publisher to the topic /state_fsm, used to indicate if we are in a state that allows the substate TRACK (possible in NORMAL or FIND) or not
         self.pub_state = rospy.Publisher('/state_fsm', Bool, queue_size=10)
+        ## subscriber to the topic /new_ball_detected, used to check wheter or not a ball has been detected by the object_detection node
         self.sub = rospy.Subscriber('/new_ball_detected', Bool, clbk_track)
         
     def execute(self, userdata):
         
-        """! Sleeping state execution 
+        """! Find state execution 
         @section Description
-        In this state the home position is sent trough an action client to the server that makes the robot move toward the goal position
-        @return the user_action
+        In this state is launched the node explore_lite package in order to explore the enviroment and find the unkwnown location. The robot stays in this state until the location is found or the timer has expired
+        @return find if the timer has not expired, play if the desired location has been found
         """
-        global t_final,child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
+        global child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
         print('I am looking for the location!')
         time.sleep(2)
         GoDetection = True
@@ -538,14 +551,11 @@ class Find(smach.State):
         
         if LaunchExploration :
                 LaunchExploration = False
-               # os.system("gnome-terminal -x roslaunch explore_lite explore.launch")
-                #child = subprocess.Popen(["gnome-terminal","-x","roslaunch","explore_lite","explore.launch"])
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
-                #child = subprocess.run(["lxterminal","-e","roslaunch","explore_lite","explore.launch"])
-                t_final = time.time() + 120 
+                t_end = time.time() + 180 
 
         
-        if time.time() > t_final :
+        if time.time() > t_end :
                 print('Cannot found the ball, try again!!')
                 child.send_signal(signal.SIGINT)
                 FindState = False 
