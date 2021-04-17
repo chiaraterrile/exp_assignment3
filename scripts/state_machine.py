@@ -157,7 +157,8 @@ def clbk_ball_info(msg):
         ball_info.color = msg.color
         room = ' '
         color_found = ball_info.color
-
+        # for each room check if the color is the one of the new object
+        # if it is, assign to the corresponding room the xy coordinates, and set the flag known to true
         if color_found == room1.color:
                 rospy.loginfo ('Found %s',room1.location)
                 room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
@@ -210,6 +211,8 @@ def clbk_ball_info(msg):
                 det = False 
                 room_track = room6
 
+        # if we are in the FIND state, check if the new room is the desired location
+        # assigns a value to the flag FoundLocation and if it is false, put to true the flag for launching the exploration
         if FindState :
                 if desired_location == room_track.location :
                         rospy.loginfo('I have found the desired location!')
@@ -219,22 +222,26 @@ def clbk_ball_info(msg):
                         rospy.loginfo('The room found is not the desired one!')
                         FoundLocation = False
                         LaunchExploration = True
-        
+        # if not in FIND, communicate to the user that is coming back to normal
         else :
+                        rospy.loginfo ('Back to NORMAL state')
                         print('I am moving to random position : ', desired_position_normal)
 
 def clbk_track(msg):
         """! This callback is used to check whether or not a new object has been detected by the object_detection. If this is true ( det = True) the robot goes in the substate TRACK and subscirbe to the topic /ball_info to get the coordinates and the color of the object """
         global FindState,child,det,t_final
         det = msg
-       
-        if det != False :
-            if FindState :
+        
+        # if a new object has been detected switches to substate TRACK
+        if det :
+            # if in FIND state, shut down the explore_lite before switching to TRACK, and reinitialize the timer, in order to let the robot reaching the new ball
+            if FindStat
+                    t_final = time.time() + 60
                     child.send_signal(signal.SIGINT)
                     
             rospy.loginfo('############ Substate TRACK ##############')
             
-            t_final = time.time() + 60 
+            # at the same time subscribes to /ball_info topic to get informations about the ball
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
         
                 
@@ -387,17 +394,23 @@ class Playing(smach.State):
 
         print('I am here, I am waiting for the command!!')
 
+        # subscriber to the topic play_command to store the GoTo command received by the user
         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
         
         play_coordinates = Point()
         room = ' '
+        ## flag that indictates if the robot has to go in the NORMAL state, it happens in case of no command received
         GoNormal = False
+        # until a GoTo command is not received
         if command_play.go != 'GoTo' :
+                # start the timer
                 t_end = time.time() + 20 
                 while time.time() < t_end :
-                        
+                        # when the timer elapses, goes in NORMAL
                         GoNormal  = True
+                        # keeps subscribing to check if a command is arrived
                         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
+                        # if it is exit
                         if command_play.go == 'GoTo' :
                                 rospy.loginfo('I have received a command!')
                                 print(command_play)
@@ -407,9 +420,14 @@ class Playing(smach.State):
                 if GoNormal :
                         rospy.loginfo('no GoTo command received!')
                         return ('normal')
-
+        # assigns the location in the command to the varibale desired_location
         desired_location = command_play.location
         
+        #for all the six rooms, check if the location is the same of desired one
+        # if it is, check if the coordinates are known or not
+        # if they are known, this is the room in which the robot will go
+        # if not, return find
+
         if desired_location == room1.location:
                 print(room1.known)
                 if room1.known != False:
@@ -494,32 +512,19 @@ class Playing(smach.State):
                         print('The location is unknown')
                         LaunchExploration = True
                         return('find')
+        # if the location in the command is invalid ( syntax error or a location that is not in the enviroment) return play
         elif desired_location != room1.location and  desired_location != room2.location and  desired_location != room3.location and  desired_location != room4.location and  desired_location != room5.location and  desired_location != room6.location :
                         rospy.loginfo('Invalid location!! Try again!')
                         return('play')
 
-
+        # if everything is ok, the robot moves to the desired location
         print('I am moving to  : ', room, play_coordinates)
 
-        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-        client.wait_for_server()
-
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
-        goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = play_coordinates.x
-        goal.target_pose.pose.position.y = play_coordinates.y
-        goal.target_pose.pose.orientation.w = 1
-
-        client.send_goal(goal)
-        wait = client.wait_for_result()
+        Move(play_coordinates,1)
 
         command_play = command()
         
         return('play') 
-
-
-           
 
         
         rospy.loginfo('Executing state PLAYING (users = %f)'%userdata.playing_counter_in)
@@ -551,30 +556,34 @@ class Find(smach.State):
         global t_final,child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
         rospy.loginfo('I am looking for the location!')
         time.sleep(2)
+
+        # flags to allow the detection and to communicate that the robot is in the FIND state
         GoDetection = True
-        
         FindState = True
+
         self.pub_state.publish(GoDetection)
         
+        # this file is launched just the first time the robot goes in the FINS state, in order to avoid that it is continuosly launched unnecessarly
         if LaunchExploration :
                 LaunchExploration = False
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
+                # timer to exit from the FIND state, in case of non-finding of the location
                 t_final = time.time() + 60 
 
-        
+        # if the timer elapses, shut down the launch file and return play
         if time.time() > t_final :
                 print('Cannot found the ball, try again!!')
-                
                 child.send_signal(signal.SIGINT)
                 FindState = False 
                 det = False
                 return ('play')
 
-        #print(FoundLocation)
+        # if the location is found, exit from the find state and return play
         if FoundLocation :
                 FindState = False 
                 return ('play')
-        
+
+        # if none of these conditions are found, keeps on returning find
         return('find')
    	
 	

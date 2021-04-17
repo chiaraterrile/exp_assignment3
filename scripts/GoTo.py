@@ -34,17 +34,19 @@ from geometry_msgs.msg import Quaternion
 
 
 def GoTo():
+    ## publisher to the topic /play_command to send a GoTo command to the FSM
     pub_command= rospy.Publisher('play_command', command, queue_size=10)
-    rospy.init_node('GoTo', anonymous=True)
-    
+    rospy.init_node('GoTo', anonymous=True) 
+
+    ## variable of type command, that contains the GoTo + location command
     msg = command()
  
     msg.go = 'GoTo'
-    #print('Where do you wanna go?')
+    
     loc = raw_input('Where do you wanna go? ')
-    #msg.location = 'living room'
+    print('You have typed : ', loc)
+
     msg.location = loc
-    print(msg.location)
     pub_command.publish(msg)
    
 if __name__ == '__main__':

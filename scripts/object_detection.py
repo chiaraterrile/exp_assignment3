@@ -27,12 +27,12 @@ from std_msgs.msg import Bool
 
 VERBOSE = False
 
-ball_pos = Point()
-ball_info= ball()
 
-GoDetection = Bool()
+
+# Global flags
+## flag that indicates if the robot is in a state that allows the object detection (NORMAL or FIND) or not
 GoDetection = False
-
+## flags that indicate if an object of that color has been already detected or not
 red_detected = False
 blue_detected = False
 green_detected = False
@@ -40,21 +40,24 @@ black_detected = False
 magenta_detected = False
 yellow_detected = False
 
+## variable that contains the position of the ball according to the robot's odometry
+ball_pos = Point()
+## variable in which are stored the informations about the color of the ball and its position
+ball_info= ball()
+
 def clbk_ball_pos(msg):
-         global ball_pos
-         ball_pos.x = msg.pose.pose.position.x
-         ball_pos.y = msg.pose.pose.position.y
-         ball_pos.z = msg.pose.pose.position.z
-         #print(ball_pos)
+    """! This callback assigns the informations about the position of the robot (when is near to the ball) to ball_pos variable """    
+    global ball_pos
+    ball_pos.x = msg.pose.pose.position.x
+    ball_pos.y = msg.pose.pose.position.y
+    ball_pos.z = msg.pose.pose.position.z
+    
 
 def clbk_state(msg):
-         global GoDetection
-         GoDetection = msg.data
-         #if status != ' ' :
-            #print('uffa')
-         #else :
-            # print('bellaaaaaa')
-         
+    """! This callback stores the information about the state of the robot assigning a boolean value to the flag GoDetection """
+    global GoDetection
+    GoDetection = msg.data
+    
          
          
 
@@ -65,7 +68,7 @@ class image_feature:
         global GoDetection
         '''Initialize ros publisher, ros subscriber'''
         rospy.init_node('object_detection', anonymous=True)
-     # topic where we publish
+        # topic where we publish
         self.image_pub = rospy.Publisher("/output/image_raw/compressed",
                                          CompressedImage, queue_size=1)
         self.vel_pub = rospy.Publisher("/cmd_vel",
@@ -76,7 +79,7 @@ class image_feature:
                                            CompressedImage, self.callback,  queue_size=1)
 
         self.sub = rospy.Subscriber('/odom', Odometry, clbk_ball_pos)
-
+        ## this subscriber calls the clbk_state in order to check if is possible the detection or not
         self.sub_state = rospy.Subscriber('/state_fsm', Bool, clbk_state)
 
     def callback(self, ros_data):
@@ -87,21 +90,19 @@ class image_feature:
         if VERBOSE:
             print ('received image of type: "%s"' % ros_data.format)
 
+        ## this publisher is used to send to the FSM the informations about a ball
         pub_ball = rospy.Publisher('/ball_info', ball, queue_size=10)
-
+        ## this publisher is used to communicate to the FSM that a new object has been found
         pub_detection = rospy.Publisher('/new_ball_detected', Bool , queue_size=10)
-        pub_coord = rospy.Publisher('/coord_available', Bool , queue_size=10)
+        
         #### direct conversion to CV2 ####
         np_arr = np.fromstring(ros_data.data, np.uint8)
         image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
-
-        #print('I am not looking for objects...')
         
-
+        # the object detetction proceed only if we are in NORMAL or FIND state
         if GoDetection  :
 
-            #print('Looking for new object to detect')
-        
+            ## upper and lower for each color (the six colors of the balls in the rooms)
             greenLower = (50, 50, 50)
             greenUpper = (70, 255, 255)
 
@@ -117,10 +118,7 @@ class image_feature:
             magentaLower = (125, 50, 50) 
             magentaUpper = (150, 255, 255)
 
-            #magentaLower = (100, 50, 50) 
-            #magentaUpper = (200, 255, 255)
-
-
+            
             yellowLower = (25, 50, 50) 
             yellowUpper = (35, 255, 255)
 
@@ -128,7 +126,7 @@ class image_feature:
             blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
             hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
             
-
+            ## definition of all the masks for all the colors
             mask_blue = cv2.inRange(hsv, blueLower, blueUpper)
             mask_blue= cv2.erode(mask_blue, None, iterations=2)
             mask_blue = cv2.dilate(mask_blue, None, iterations=2)
@@ -153,8 +151,7 @@ class image_feature:
             mask_yellow = cv2.erode(mask_yellow, None, iterations=2)
             mask_yellow = cv2.dilate(mask_yellow, None, iterations=2)
             
-        #cv2.imshow('mask', mask)
-            #GoDetection = 0
+       
             ##########   GREEN detection  #######################
             cnts_green = cv2.findContours(mask_green.copy(), cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)
@@ -163,8 +160,6 @@ class image_feature:
             # only proceed if at least one contour was found
             if len(cnts_green) > 0:
                 det = False
-                
-                
                 # find the largest contour in the mask, then use
                 # it to compute the minimum enclosing circle and
                 # centroid
@@ -172,12 +167,14 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size
+                
+                # only proceed if the color has not been already detected
                 if green_detected != True  :
+        
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the green object')
-                    print('---------',radius)
+                    # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -188,7 +185,7 @@ class image_feature:
                         vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -197,6 +194,7 @@ class image_feature:
                             pub_ball.publish(ball_info)
                             print('published!')
                             time.sleep(5)
+                            
                             green_detected = True
                             det = False
 
@@ -211,17 +209,17 @@ class image_feature:
                 # it to compute the minimum enclosing circle and
                 # centroid
                 det = False
-                
                 c = max(cnts_blue, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size 
+                
+                # only proceed if the color has not been already detected
                 if blue_detected != True  :
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the blue object')
-                    print('---------',radius)
+                    # only proceed if the radius meets a minimum size 
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -232,7 +230,8 @@ class image_feature:
                         vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
+
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                         
                             ball_info.x = ball_pos.x
@@ -242,6 +241,7 @@ class image_feature:
                             pub_ball.publish(ball_info)
                             print('published!')
                             time.sleep(5)
+
                             blue_detected = True
                             det = False
                         
@@ -264,12 +264,13 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size
+    
+                # only proceed if the color has not been already detected
                 if red_detected != True :
                     print('I am getting closer to the red object')
-                    print('---------',radius)
                     det = True
                     pub_detection.publish(det)
+                    # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -280,7 +281,8 @@ class image_feature:
                         vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
+
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -310,12 +312,13 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size
+
+                # only proceed if the color has not been already detected
                 if black_detected != True :
                     print('I am getting closer to the black object')
-                    print('---------',radius)
                     det = True
                     pub_detection.publish(det)
+                    # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -326,7 +329,8 @@ class image_feature:
                         vel.angular.z = -0.002*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
+
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -355,13 +359,14 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size
+
+                # only proceed if the color has not been already detected
                 if magenta_detected != True  :
 
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the magenta object')
-                    print('---------',radius)
+                    # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -372,8 +377,8 @@ class image_feature:
                         vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
 
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
@@ -402,13 +407,14 @@ class image_feature:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                # only proceed if the radius meets a minimum size
+
+                # only proceed if the color has not been already detected
                 if yellow_detected != True :
 
                     det = True
                     pub_detection.publish(det)
                     print('I am getting closer to the yellow object')
-                    print('---------',radius)
+                    # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
@@ -419,8 +425,8 @@ class image_feature:
                         vel.angular.z = -0.006*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
-                        print('++++++++++++',vel.linear.x)
-
+        
+                        # if the robot is near the ball, stores the informations about its color and its position
                         if vel.linear.x < 0.1 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
