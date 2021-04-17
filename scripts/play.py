@@ -33,11 +33,11 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Quaternion
 
 
+
 def play_command():
     pub = rospy.Publisher('play', Bool, queue_size=10)
     rospy.init_node('play_command', anonymous=True)
-    #rate = rospy.Rate(10) # 10hz
-   # while not rospy.is_shutdown():
+    
     play_go = True
     pub.publish(play_go)
     pub_command= rospy.Publisher('play_command', command, queue_size=10)

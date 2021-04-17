@@ -82,10 +82,10 @@ room3 = Room(location = "living room",color="green",known = False)
 room4 = Room(location = "kitchen",color="yellow",known = False)
 room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
-
-
-
+## variable for the timer in the FIND state
 t_final = 0
+
+
 
 
 
@@ -159,7 +159,7 @@ def clbk_ball_info(msg):
         color_found = ball_info.color
 
         if color_found == room1.color:
-                print ('Found ',room1.location)
+                rospy.loginfo ('Found %s',room1.location)
                 room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                 print(room1.x , room1.y)
                 ball_info = ball()
@@ -168,7 +168,7 @@ def clbk_ball_info(msg):
 
 
         elif color_found == room2.color:
-                print ('Found ',room2.location)
+                rospy.loginfo ('Found %s',room2.location)
                 room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
                 print(room2.x , room2.y)
                 ball_info = ball()
@@ -177,7 +177,7 @@ def clbk_ball_info(msg):
                 
 
         elif color_found ==room3.color:
-                print ('Found ',room3.location)
+                rospy.loginfo ('Found %s',room3.location)
                 room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
                 print(room3.x , room3.y)
                 ball_info = ball()
@@ -185,7 +185,7 @@ def clbk_ball_info(msg):
                 room_track = room3
 
         elif color_found == room4.color:
-                print ('Found ',room4.location)
+                rospy.loginfo ('Found %s',room4.location)
                 room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 print(room4.x , room4.y)
                 ball_info = ball()
@@ -193,7 +193,7 @@ def clbk_ball_info(msg):
                 room_track = room4
 
         elif color_found == room5.color:
-                print ('Found ',room5.location)
+                rospy.loginfo ('Found %s',room5.location)
                 room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                 print(room5.x , room5.y)
                 ball_info = ball()
@@ -203,7 +203,7 @@ def clbk_ball_info(msg):
         
 
         elif color_found == room6.color:
-                print ('Found ',room6.location)
+                rospy.loginfo ('Found %s',room6.location)
                 room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
                 print(room6.x , room6.y)
                 ball_info = ball()
@@ -212,30 +212,29 @@ def clbk_ball_info(msg):
 
         if FindState :
                 if desired_location == room_track.location :
-                        print('I have found the desired location!')
+                        rospy.loginfo('I have found the desired location!')
                         FoundLocation = True
 
                 elif desired_location != room_track.location:
-                        print('The room found is not the desired one!')
+                        rospy.loginfo('The room found is not the desired one!')
                         FoundLocation = False
                         LaunchExploration = True
         
         else :
                         print('I am moving to random position : ', desired_position_normal)
 
-
-
 def clbk_track(msg):
         """! This callback is used to check whether or not a new object has been detected by the object_detection. If this is true ( det = True) the robot goes in the substate TRACK and subscirbe to the topic /ball_info to get the coordinates and the color of the object """
-        global FindState,child,det
+        global FindState,child,det,t_final
         det = msg
        
         if det != False :
             if FindState :
                     child.send_signal(signal.SIGINT)
                     
-            print ('############ Substate TRACK ##############')
+            rospy.loginfo('############ Substate TRACK ##############')
             
+            t_final = time.time() + 60 
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
         
                 
@@ -283,15 +282,18 @@ class Normal(smach.State):
 
         desired_position_normal = coordinates_generator()
         desired_orientation_normal = 1
-        
+         
         print('I am moving to random position : ', desired_position_normal)
         time.sleep(2)
         GoDetection = True
         self.pub_state.publish(GoDetection)
+        
+
 
         Move(desired_position_normal,desired_orientation_normal)
 
-        print('I am arrived! ')
+        #print('I am arrived! ')
+        print('I am arrived')
         return user_action()
        
         
@@ -397,13 +399,13 @@ class Playing(smach.State):
                         GoNormal  = True
                         sub_go = rospy.Subscriber('/play_command', command, clbk_go)
                         if command_play.go == 'GoTo' :
-                                print('I have received a command!')
+                                rospy.loginfo('I have received a command!')
                                 print(command_play)
                                 GoNormal  = False
                                 break
                         
                 if GoNormal :
-                        print('no GoTo command received!')
+                        rospy.loginfo('no GoTo command received!')
                         return ('normal')
 
         desired_location = command_play.location
@@ -417,7 +419,7 @@ class Playing(smach.State):
                         play_coordinates.y = room1.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
                
@@ -432,7 +434,7 @@ class Playing(smach.State):
                         play_coordinates.y = room2.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
                 
@@ -447,7 +449,7 @@ class Playing(smach.State):
                         play_coordinates.y = room3.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
                  
@@ -462,7 +464,7 @@ class Playing(smach.State):
                         play_coordinates.y = room4.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
 
@@ -475,7 +477,7 @@ class Playing(smach.State):
                         play_coordinates.y = room5.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
                 
@@ -489,11 +491,11 @@ class Playing(smach.State):
                         play_coordinates.y = room6.y
                 else :
                         command_play = command()
-                        print('devo andare in un altro stato')
+                        print('The location is unknown')
                         LaunchExploration = True
                         return('find')
         elif desired_location != room1.location and  desired_location != room2.location and  desired_location != room3.location and  desired_location != room4.location and  desired_location != room5.location and  desired_location != room6.location :
-                        print('Invalid location!! Try again!')
+                        rospy.loginfo('Invalid location!! Try again!')
                         return('play')
 
 
@@ -547,7 +549,7 @@ class Find(smach.State):
         @return find if the timer has not expired, play if the desired location has been found
         """
         global t_final,child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
-        print('I am looking for the location!')
+        rospy.loginfo('I am looking for the location!')
         time.sleep(2)
         GoDetection = True
         
@@ -557,13 +559,15 @@ class Find(smach.State):
         if LaunchExploration :
                 LaunchExploration = False
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
-                t_final = time.time() + 120 
+                t_final = time.time() + 60 
 
         
         if time.time() > t_final :
                 print('Cannot found the ball, try again!!')
+                
                 child.send_signal(signal.SIGINT)
                 FindState = False 
+                det = False
                 return ('play')
 
         #print(FoundLocation)
