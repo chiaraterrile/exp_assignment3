@@ -85,7 +85,7 @@ room6 = Room(location = "bedroom",color="black",known = False)
 
 
 
-
+t_final = 0
 
 
 
@@ -93,6 +93,7 @@ room6 = Room(location = "bedroom",color="black",known = False)
 def coordinates_generator():
         """! This function is used to generate the random coordinates for the NORMAL behaviour. (coordinates are chosen among several points that are in the map) """
         desired_position_normal = Point()
+        # points known a priori to be in the map
         points = [(-1, 6), (-4, 2),(-3,-4),(4,0),(3,-4),(4,-7)]
         couple= random.choice(points)
         desired_position_normal.x = couple[0]
@@ -149,7 +150,7 @@ def clbk_go(msg):
 
 def clbk_ball_info(msg):
         """! This callback is used to save the informations received by the object_detection node """
-        global LaunchExploration,child,det,ball,room_track,coord,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
+        global LaunchExploration,child,det,ball,room_track,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
         
         ball_info.x = msg.x
         ball_info.y = msg.y
@@ -337,7 +338,7 @@ class Sleeping(smach.State):
         print('I am arrived home ')
 
         time.sleep(5)
-        return random.choice('normal')
+        return ('normal')
    	
 	
         rospy.loginfo('Executing state SLEEPING (users = %f)'%userdata.sleeping_counter_in)
@@ -491,6 +492,10 @@ class Playing(smach.State):
                         print('devo andare in un altro stato')
                         LaunchExploration = True
                         return('find')
+        elif desired_location != room1.location and  desired_location != room2.location and  desired_location != room3.location and  desired_location != room4.location and  desired_location != room5.location and  desired_location != room6.location :
+                        print('Invalid location!! Try again!')
+                        return('play')
+
 
         print('I am moving to  : ', room, play_coordinates)
 
@@ -541,7 +546,7 @@ class Find(smach.State):
         In this state is launched the node explore_lite package in order to explore the enviroment and find the unkwnown location. The robot stays in this state until the location is found or the timer has expired
         @return find if the timer has not expired, play if the desired location has been found
         """
-        global child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
+        global t_final,child,GoDetection,desired_location,FindState,det,FoundLocation,room_track,LaunchExploration,process
         print('I am looking for the location!')
         time.sleep(2)
         GoDetection = True
@@ -552,10 +557,10 @@ class Find(smach.State):
         if LaunchExploration :
                 LaunchExploration = False
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
-                t_end = time.time() + 180 
+                t_final = time.time() + 120 
 
         
-        if time.time() > t_end :
+        if time.time() > t_final :
                 print('Cannot found the ball, try again!!')
                 child.send_signal(signal.SIGINT)
                 FindState = False 
