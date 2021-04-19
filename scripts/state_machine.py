@@ -94,7 +94,7 @@ def coordinates_generator():
         """! This function is used to generate the random coordinates for the NORMAL behaviour. (coordinates are chosen among several points that are in the map) """
         desired_position_normal = Point()
         # points known a priori to be in the map
-        points = [(-1, 6), (-4, 2),(-3,-3),(4,-5),(4,0),(4,2),(3,-4),(-3,8),(-4,-5),(-2,0),(-3,1),(-4,-3),(4,-7),(-2,-3),(-4,7),(-5,6),(-1,6),(-4,4),(0,4)]
+        points = [(-1, 6), (-4, 2),(-3,-3),(4,-5),(4,0),(4,2),(3,-4),(-3,8),(-2,0),(-3,1),(-4,-3),(4,-7),(-2,-3),(-4,7),(-5,6),(-1,6),(-4,4),(0,4)]
         couple= random.choice(points)
         desired_position_normal.x = couple[0]
         desired_position_normal.y = couple[1]
@@ -155,83 +155,87 @@ def clbk_ball_info(msg):
         ball_info.x = msg.x
         ball_info.y = msg.y
         ball_info.color = msg.color
-        room = ' '
         color_found = ball_info.color
         # for each room check if the color is the one of the new object
         # if it is, assign to the corresponding room the xy coordinates, and set the flag known to true
-        if color_found == room1.color:
-                rospy.loginfo ('Found %s',room1.location)
-                room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
-                print(room1.x , room1.y)
-                ball_info = ball()
-                det = False 
-                room_track = room1
+        # first check det in order to print the message just one time i.e. when the robot is near the ball (beacuse after this moment det become false) and then exit from this callback because det is false and this topic is no more subscribed
+        if det :
+
+                time.sleep(1)
+                if color_found == room1.color:
+                        rospy.loginfo ('Found %s',room1.location)
+                        room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det = False 
+                        room_track = room1
+                        
 
 
-        elif color_found == room2.color:
-                rospy.loginfo ('Found %s',room2.location)
-                room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
-                print(room2.x , room2.y)
-                ball_info = ball()
-                det =  False
-                room_track = room2
+                elif color_found == room2.color:
+                        rospy.loginfo ('Found %s',room2.location)
+                        room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det =  False
+                        room_track = room2
+                        
+                        
+
+                elif color_found ==room3.color:
+                        rospy.loginfo ('Found %s',room3.location)
+                        room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det = False 
+                        room_track = room3
+                        
+
+                elif color_found == room4.color:
+                        rospy.loginfo ('Found %s',room4.location)
+                        room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det = False 
+                        room_track = room4
                 
 
-        elif color_found ==room3.color:
-                rospy.loginfo ('Found %s',room3.location)
-                room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
-                print(room3.x , room3.y)
-                ball_info = ball()
-                det = False 
-                room_track = room3
+                elif color_found == room5.color:
+                        rospy.loginfo ('Found %s',room5.location)
+                        room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det = False 
+                        room_track = room5
+                        
 
-        elif color_found == room4.color:
-                rospy.loginfo ('Found %s',room4.location)
-                room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
-                print(room4.x , room4.y)
-                ball_info = ball()
-                det = False 
-                room_track = room4
+                
 
-        elif color_found == room5.color:
-                rospy.loginfo ('Found %s',room5.location)
-                room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
-                print(room5.x , room5.y)
-                ball_info = ball()
-                det = False 
-                room_track = room5
+                elif color_found == room6.color:
+                        rospy.loginfo ('Found %s',room6.location)
+                        room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
+                        ball_info = ball()
+                        det = False 
+                        room_track = room6
+                        
+                
+                # if we are in the FIND state, check if the new room is the desired location
+                # assigns a value to the flag FoundLocation and if it is false, put to true the flag for launching the exploration
+                if FindState :
+                        if desired_location == room_track.location :
+                                rospy.loginfo('I have found the desired location!')
+                                FoundLocation = True
+                                
 
-        
-
-        elif color_found == room6.color:
-                rospy.loginfo ('Found %s',room6.location)
-                room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
-                print(room6.x , room6.y)
-                ball_info = ball()
-                det = False 
-                room_track = room6
-
-        # if we are in the FIND state, check if the new room is the desired location
-        # assigns a value to the flag FoundLocation and if it is false, put to true the flag for launching the exploration
-        if FindState :
-                if desired_location == room_track.location :
-                        rospy.loginfo('I have found the desired location!')
-                        FoundLocation = True
-
-                elif desired_location != room_track.location:
-                        rospy.loginfo('The room found is not the desired one!')
-                        FoundLocation = False
-                        LaunchExploration = True
-        # if not in FIND, communicate to the user that is coming back to normal
-        else :
-                        rospy.loginfo ('Back to NORMAL state')
-                        print('I am moving to random position : ', desired_position_normal)
+                        elif desired_location != room_track.location:
+                                rospy.loginfo('The room found is not the desired one!')
+                                FoundLocation = False
+                                LaunchExploration = True
+                # if not in FIND, communicate to the user that is coming back to normal
+                else :
+                                rospy.loginfo ('Back to NORMAL state')
+                                print('I am moving to random position : ', desired_position_normal)
+                                
 
 def clbk_track(msg):
         """! This callback is used to check whether or not a new object has been detected by the object_detection. If this is true ( det = True) the robot goes in the substate TRACK and subscirbe to the topic /ball_info to get the coordinates and the color of the object """
         global FindState,child,det,t_final
-        det = msg
-        
+        det = msg.data
         # if a new object has been detected switches to substate TRACK
         if det :
             # if in FIND state, shut down the explore_lite before switching to TRACK, and reinitialize the timer, in order to let the robot reaching the new ball
@@ -242,6 +246,7 @@ def clbk_track(msg):
             
             # at the same time subscribes to /ball_info topic to get informations about the ball
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
+       
         
                 
        
@@ -254,6 +259,7 @@ def user_action():
                 return ('play')
         else :
                 return random.choice(['normal','sleep'])
+               
         
 # FSM functions 
 
@@ -280,7 +286,7 @@ class Normal(smach.State):
     
         """! Normal state execution 
         @section Description
-        In this state the robot goes in a random position in the map. This position is passed as input to the function Move() which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment.
+        In this state the robot goes in a random position i break n the map. This position is passed as input to the function Move() which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment.
         In the mean time, subscribing to the topic /new_ball_detected, every time the flag det is set to True, the robot switches to the substate TRACK.
         @return user_action
         """
@@ -581,6 +587,7 @@ class Find(smach.State):
         # if the location is found, exit from the find state and return play
         if FoundLocation :
                 FindState = False 
+                FoundLocation = False
                 return ('play')
 
         # if none of these conditions are found, keeps on returning find

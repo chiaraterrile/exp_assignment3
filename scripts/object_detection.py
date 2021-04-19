@@ -193,10 +193,11 @@ class image_feature:
 
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(5)
-                            
+                            vel.linear.x = 0.2
+                            radius = 10
                             green_detected = True
                             det = False
+                            pub_detection.publish(det)
 
             ##########   BLUE detection  #######################
             cnts_blue = cv2.findContours(mask_blue.copy(), cv2.RETR_EXTERNAL,
@@ -240,10 +241,11 @@ class image_feature:
 
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(5)
-
+                            vel.linear.x = 0.2
+                            radius = 10
                             blue_detected = True
                             det = False
+                            pub_detection.publish(det)
                         
 
 
@@ -290,10 +292,11 @@ class image_feature:
 
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(5)
-
+                            vel.linear.x = 0.2
+                            radius = 10
                             red_detected = True
                             det = False
+                            pub_detection.publish(det)
 
 
             ##########   BLACK detection  #######################
@@ -338,10 +341,12 @@ class image_feature:
                             #print(ball_info)
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(2)
+                            vel.linear.x = 0.2
+                            radius = 10
 
                             black_detected = True
                             det = False
+                            pub_detection.publish(det)
 
             
             ##########   MAGENTA detection  #######################
@@ -386,10 +391,11 @@ class image_feature:
 
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(5)
-
+                            vel.linear.x = 0.2
+                            radius = 10
                             magenta_detected = True
                             det = False
+                            pub_detection.publish(det)
             
 
             ##########   YELLOW detection  #######################
@@ -434,10 +440,12 @@ class image_feature:
 
                             pub_ball.publish(ball_info)
                             print('published!')
-                            time.sleep(5)
-
+                            
+                            vel.linear.x = 0.2
+                            radius = 10
                             yellow_detected = True
                             det = False
+                            pub_detection.publish(det)
 
 
             # update the points queue
