@@ -81,10 +81,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>462 574000000</sim_time>
-      <real_time>35 767528712</real_time>
-      <wall_time>1618322469 911734278</wall_time>
-      <iterations>35692</iterations>
+      <sim_time>510 273000000</sim_time>
+      <real_time>47 795924134</real_time>
+      <wall_time>1618845128 229434008</wall_time>
+      <iterations>47699</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -226,10 +226,10 @@
         </link>
       </model>
       <model name='unit_sphere_2'>
-        <pose frame=''>5.92931 -6.12514 0.25 0.023271 -0.020718 -0</pose>
+        <pose frame=''>5.91075 -8.15856 0.25 0.02327 -0.044051 0</pose>
         <scale>0.5 0.5 0.5</scale>
         <link name='link'>
-          <pose frame=''>5.92931 -6.12514 0.25 0.023271 -0.020718 -0</pose>
+          <pose frame=''>5.91075 -8.15856 0.25 0.02327 -0.044051 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -1767,7 +1767,7 @@
     </model>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>4.46094 -11.5145 12.8131 0 0.897797 1.55219</pose>
+        <pose frame=''>-4.55622 -14.6192 23.6337 0 1.0058 0.80419</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

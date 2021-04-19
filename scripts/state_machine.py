@@ -63,6 +63,8 @@ det = False
 flag_play = False 
 ## flag that indicates that in the FIND state the desired location has been found
 FoundLocation = False
+## flag that idicates if the robot is tracking a ball in order to avoid returning sleep if the robot reaches the target in the mean time
+TrackOnDoing = False 
 
 # Global variables
 ## variable that contains the desired location given by the GoTo command
@@ -84,7 +86,7 @@ room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
 ## variable for the timer in the FIND state
 t_final = 0
-
+actual_state = ' '
 
 
 
@@ -150,7 +152,7 @@ def clbk_go(msg):
 
 def clbk_ball_info(msg):
         """! This callback is used to save the informations received by the object_detection node """
-        global LaunchExploration,child,det,ball,room_track,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
+        global TrackOnDoing,LaunchExploration,child,det,ball,room_track,room1,room2,room3,room4,room5,room6,ball_info,FindState,FoundLocation
         
         ball_info.x = msg.x
         ball_info.y = msg.y
@@ -163,6 +165,7 @@ def clbk_ball_info(msg):
 
                 time.sleep(1)
                 if color_found == room1.color:
+                      
                         rospy.loginfo ('Found %s',room1.location)
                         room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -172,6 +175,7 @@ def clbk_ball_info(msg):
 
 
                 elif color_found == room2.color:
+                       
                         rospy.loginfo ('Found %s',room2.location)
                         room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -181,6 +185,7 @@ def clbk_ball_info(msg):
                         
 
                 elif color_found ==room3.color:
+                      
                         rospy.loginfo ('Found %s',room3.location)
                         room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -189,6 +194,7 @@ def clbk_ball_info(msg):
                         
 
                 elif color_found == room4.color:
+                     
                         rospy.loginfo ('Found %s',room4.location)
                         room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -197,6 +203,7 @@ def clbk_ball_info(msg):
                 
 
                 elif color_found == room5.color:
+                     
                         rospy.loginfo ('Found %s',room5.location)
                         room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -207,6 +214,7 @@ def clbk_ball_info(msg):
                 
 
                 elif color_found == room6.color:
+                          
                         rospy.loginfo ('Found %s',room6.location)
                         room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
                         ball_info = ball()
@@ -226,27 +234,29 @@ def clbk_ball_info(msg):
                                 rospy.loginfo('The room found is not the desired one!')
                                 FoundLocation = False
                                 LaunchExploration = True
-                # if not in FIND, communicate to the user that is coming back to normal
-                else :
+                # if not in FIND, communicate to the user that is coming back to normal and set the flag TrackOnDoing to false
+                else :  
+                                TrackOnDoing = False 
                                 rospy.loginfo ('Back to NORMAL state')
                                 print('I am moving to random position : ', desired_position_normal)
                                 
 
 def clbk_track(msg):
         """! This callback is used to check whether or not a new object has been detected by the object_detection. If this is true ( det = True) the robot goes in the substate TRACK and subscirbe to the topic /ball_info to get the coordinates and the color of the object """
-        global FindState,child,det,t_final
+        global FindState,child,det,t_final,TrackOnDoing
         det = msg.data
-        # if a new object has been detected switches to substate TRACK
+        # if a new object has been detected switches to substate TRACK and set the flag TrackOnDoing to true
         if det :
             # if in FIND state, shut down the explore_lite before switching to TRACK, and reinitialize the timer, in order to let the robot reaching the new ball
             if FindState:
                     t_final = time.time() + 60
-                    child.send_signal(signal.SIGINT)     
+                    child.send_signal(signal.SIGINT) 
+            TrackOnDoing = True    
             rospy.loginfo('############ Substate TRACK ##############')
             
             # at the same time subscribes to /ball_info topic to get informations about the ball
             sub_info = rospy.Subscriber('/ball_info', ball, clbk_ball_info)
-       
+        
         
                 
        
@@ -254,11 +264,17 @@ def clbk_track(msg):
 
 def user_action():
 	"""! this function controls the next state of the FSM (in the NORMAL state )according to the action of the user. If the flag_play is True the robot goes in the PLAY state."""
-        global flag_play
+        global flag_play,TrackOnDoing
         if flag_play :
                 return ('play')
         else :
-                return random.choice(['normal','sleep'])
+                # if the robot is tracking something and has reached the goal in the mean time, return normal so that it can proceed in tracking 
+                # it cannot return sleep because in that case it would turn off the detection and wouldn't complete that tracking
+                if TrackOnDoing :
+                        return('normal')
+                #otherwise return normal or sleep randomly     
+                else :
+                        return random.choice(['normal','sleep'])
                
         
 # FSM functions 
@@ -290,12 +306,15 @@ class Normal(smach.State):
         In the mean time, subscribing to the topic /new_ball_detected, every time the flag det is set to True, the robot switches to the substate TRACK.
         @return user_action
         """
-        global desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
+        global TrackOnDoing,desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
         desired_position_normal = coordinates_generator()
-        
+        #desired_position_normal = Point()
+        #desired_position_normal.x = 4
+        #desired_position_normal.y = -7
         desired_orientation_normal = 1
-         
+
+        TrackOnDoing = False  
         print('I am moving to random position : ', desired_position_normal)
         time.sleep(2)
         GoDetection = True
@@ -307,6 +326,7 @@ class Normal(smach.State):
 
         #print('I am arrived! ')
         print('I am arrived')
+        #self.sub.unregister()
         return user_action()
        
         
@@ -342,7 +362,6 @@ class Sleeping(smach.State):
         global GoDetection
         desired_position_sleep = Coordinates.sleep_xy
         desired_orientation_sleep = Coordinates.sleep_yaw
-
         print('I am moving to home : ', desired_position_sleep)
         time.sleep(2)
         GoDetection = False

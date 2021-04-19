@@ -171,11 +171,12 @@ class image_feature:
                 # only proceed if the color has not been already detected
                 if green_detected != True  :
         
-                    det = True
-                    pub_detection.publish(det)
-                    print('I am getting closer to the green object')
+                    
                     # only proceed if the radius meets a minimum size
                     if radius > 8:
+                        det = True
+                        pub_detection.publish(det)
+                        rospy.loginfo('I am getting closer to the green object')
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -217,11 +218,12 @@ class image_feature:
                 
                 # only proceed if the color has not been already detected
                 if blue_detected != True  :
-                    det = True
-                    pub_detection.publish(det)
-                    print('I am getting closer to the blue object')
+                    
                     # only proceed if the radius meets a minimum size 
                     if radius > 8:
+                        det = True
+                        pub_detection.publish(det)
+                        rospy.loginfo('I am getting closer to the blue object')
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -240,7 +242,7 @@ class image_feature:
                             ball_info.color = 'blue' 
 
                             pub_ball.publish(ball_info)
-                            print('published!')
+                            
                             vel.linear.x = 0.2
                             radius = 10
                             blue_detected = True
@@ -269,11 +271,12 @@ class image_feature:
     
                 # only proceed if the color has not been already detected
                 if red_detected != True :
-                    print('I am getting closer to the red object')
-                    det = True
-                    pub_detection.publish(det)
+                    
                     # only proceed if the radius meets a minimum size
                     if radius > 8:
+                        rospy.loginfo('I am getting closer to the red object')
+                        det = True
+                        pub_detection.publish(det)
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -291,7 +294,7 @@ class image_feature:
                             ball_info.color = 'red' 
 
                             pub_ball.publish(ball_info)
-                            print('published!')
+                            
                             vel.linear.x = 0.2
                             radius = 10
                             red_detected = True
@@ -318,11 +321,12 @@ class image_feature:
 
                 # only proceed if the color has not been already detected
                 if black_detected != True :
-                    print('I am getting closer to the black object')
-                    det = True
-                    pub_detection.publish(det)
+                    
                     # only proceed if the radius meets a minimum size
                     if radius > 8:
+                        rospy.loginfo('I am getting closer to the black object')
+                        det = True
+                        pub_detection.publish(det)
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -340,7 +344,7 @@ class image_feature:
                             ball_info.color = 'black' 
                             #print(ball_info)
                             pub_ball.publish(ball_info)
-                            print('published!')
+                         
                             vel.linear.x = 0.2
                             radius = 10
 
@@ -368,11 +372,12 @@ class image_feature:
                 # only proceed if the color has not been already detected
                 if magenta_detected != True  :
 
-                    det = True
-                    pub_detection.publish(det)
-                    print('I am getting closer to the magenta object')
+                    
                     # only proceed if the radius meets a minimum size
                     if radius > 8:
+                        det = True
+                        pub_detection.publish(det)
+                        rospy.loginfo('I am getting closer to the magenta object')
                         # draw the circle and centroid on the frame,
                         # then update the list of tracked points
                         cv2.circle(image_np, (int(x), int(y)), int(radius),
@@ -390,7 +395,7 @@ class image_feature:
                             ball_info.color = 'magenta' 
 
                             pub_ball.publish(ball_info)
-                            print('published!')
+                            
                             vel.linear.x = 0.2
                             radius = 10
                             magenta_detected = True
@@ -419,7 +424,7 @@ class image_feature:
 
                     det = True
                     pub_detection.publish(det)
-                    print('I am getting closer to the yellow object')
+                    rospy.loginfo('I am getting closer to the yellow object')
                     # only proceed if the radius meets a minimum size
                     if radius > 8:
                         # draw the circle and centroid on the frame,
@@ -439,7 +444,7 @@ class image_feature:
                             ball_info.color = 'yellow' 
 
                             pub_ball.publish(ball_info)
-                            print('published!')
+                            
                             
                             vel.linear.x = 0.2
                             radius = 10
