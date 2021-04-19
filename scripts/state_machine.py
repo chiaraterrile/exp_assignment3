@@ -94,7 +94,7 @@ def coordinates_generator():
         """! This function is used to generate the random coordinates for the NORMAL behaviour. (coordinates are chosen among several points that are in the map) """
         desired_position_normal = Point()
         # points known a priori to be in the map
-        points = [(-1, 6), (-4, 2),(-3,-4),(4,0),(3,-4),(4,-7)]
+        points = [(-1, 6), (-4, 2),(-3,-3),(4,-5),(4,0),(4,2),(3,-4),(-3,8),(-4,-5),(-2,0),(-3,1),(-4,-3),(4,-7),(-2,-3),(-4,7),(-5,6),(-1,6),(-4,4),(0,4)]
         couple= random.choice(points)
         desired_position_normal.x = couple[0]
         desired_position_normal.y = couple[1]
@@ -235,10 +235,9 @@ def clbk_track(msg):
         # if a new object has been detected switches to substate TRACK
         if det :
             # if in FIND state, shut down the explore_lite before switching to TRACK, and reinitialize the timer, in order to let the robot reaching the new ball
-            if FindStat
+            if FindState:
                     t_final = time.time() + 60
-                    child.send_signal(signal.SIGINT)
-                    
+                    child.send_signal(signal.SIGINT)     
             rospy.loginfo('############ Substate TRACK ##############')
             
             # at the same time subscribes to /ball_info topic to get informations about the ball
@@ -288,6 +287,7 @@ class Normal(smach.State):
         global desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
         desired_position_normal = coordinates_generator()
+        
         desired_orientation_normal = 1
          
         print('I am moving to random position : ', desired_position_normal)

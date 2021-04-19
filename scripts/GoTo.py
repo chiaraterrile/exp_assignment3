@@ -44,7 +44,7 @@ def GoTo():
     msg.go = 'GoTo'
     
     loc = raw_input('Where do you wanna go? ')
-    print('You have typed : ', loc)
+    rospy.loginfo('You have typed : %s', loc)
 
     msg.location = loc
     pub_command.publish(msg)
