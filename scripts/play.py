@@ -37,7 +37,7 @@ from geometry_msgs.msg import Quaternion
 def play_command():
     ## publisher to the topic /play, to inform the FSM that a command play has been sent
     pub = rospy.Publisher('play', Bool, queue_size=10)
-    rospy.init_node('play_command', anonymous=True)
+    rospy.init_node('play', anonymous=True)
     ## flag set to true whenever this node is launched
     play_go = True
     pub.publish(play_go)

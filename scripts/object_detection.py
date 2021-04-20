@@ -187,7 +187,7 @@ class image_feature:
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'green' 
@@ -235,14 +235,13 @@ class image_feature:
                         self.vel_pub.publish(vel)
 
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                         
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'blue' 
 
                             pub_ball.publish(ball_info)
-                            
                             vel.linear.x = 0.2
                             radius = 10
                             blue_detected = True
@@ -288,7 +287,7 @@ class image_feature:
                         self.vel_pub.publish(vel)
 
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'red' 
@@ -338,7 +337,7 @@ class image_feature:
                         self.vel_pub.publish(vel)
 
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'black' 
@@ -389,7 +388,7 @@ class image_feature:
                         self.vel_pub.publish(vel)
 
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'magenta' 
@@ -438,13 +437,12 @@ class image_feature:
                         self.vel_pub.publish(vel)
         
                         # if the robot is near the ball, stores the informations about its color and its position
-                        if vel.linear.x < 0.1 :
+                        if vel.linear.x < 0.01 :
                             ball_info.x = ball_pos.x
                             ball_info.y = ball_pos.y
                             ball_info.color = 'yellow' 
 
                             pub_ball.publish(ball_info)
-                            
                             
                             vel.linear.x = 0.2
                             radius = 10
