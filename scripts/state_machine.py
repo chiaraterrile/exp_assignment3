@@ -119,7 +119,7 @@ def Move(position,yaw):
         client.wait_for_server()
 
         goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.frame_id = "odom"
         goal.target_pose.header.stamp = rospy.Time.now()
         goal.target_pose.pose.position.x = position.x
         goal.target_pose.pose.position.y = position.y
@@ -163,7 +163,7 @@ def clbk_ball_info(msg):
         # first check det in order to print the message just one time i.e. when the robot is near the ball (beacuse after this moment det become false) and then exit from this callback because det is false and this topic is no more subscribed
         if det :
 
-                time.sleep(1)
+                time.sleep(2)
                 if color_found == room1.color:
                       
                         rospy.loginfo ('Found %s',room1.location)
@@ -249,7 +249,7 @@ def clbk_track(msg):
         if det :
             # if in FIND state, shut down the explore_lite before switching to TRACK, and reinitialize the timer, in order to let the robot reaching the new ball
             if FindState:
-                    t_final = time.time() + 60
+                    t_final = time.time() + 120
                     child.send_signal(signal.SIGINT) 
             TrackOnDoing = True    
             rospy.loginfo('############ Substate TRACK ##############')
@@ -593,7 +593,7 @@ class Find(smach.State):
                 LaunchExploration = False
                 child = subprocess.Popen(["roslaunch","explore_lite","explore.launch"])
                 # timer to exit from the FIND state, in case of non-finding of the location
-                t_final = time.time() + 60 
+                t_final = time.time() + 120 
 
         # if the timer elapses, shut down the launch file and return play
         if time.time() > t_final :

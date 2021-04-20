@@ -230,7 +230,7 @@ class image_feature:
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.006*(center[0]-400)
+                        vel.angular.z = -0.007*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
 
@@ -283,7 +283,7 @@ class image_feature:
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.006*(center[0]-400)
+                        vel.angular.z = -0.007*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
 
@@ -333,7 +333,7 @@ class image_feature:
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.002*(center[0]-400)
+                        vel.angular.z = -0.007*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
 
@@ -384,7 +384,7 @@ class image_feature:
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.006*(center[0]-400)
+                        vel.angular.z = -0.007*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
 
@@ -433,7 +433,7 @@ class image_feature:
                                 (0, 255, 255), 2)
                         cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                         vel = Twist()
-                        vel.angular.z = -0.006*(center[0]-400)
+                        vel.angular.z = -0.007*(center[0]-400)
                         vel.linear.x = -0.01*(radius-100) 
                         self.vel_pub.publish(vel)
         
