@@ -15,15 +15,30 @@ The robot has four main states (behaviour) :
 
 In the substate **TRACK**, the robot recogizes an object and its color, then it reaches the object and stores information about its position.
 
-**Note.** In all this states, while the robot is moving, it keeps avoiding obstacles using gmapping algorthm.
+**Note.** In all this states, while the robot is moving, it keeps avoiding obstacles using gmapping algorithm.
 
+In advance is known the correspondence between a location and the color of the related ball, which is the following :
 
+- blue -> entrance
+- red  -> closet
+- green -> living room
+- magenta -> bathroom
+- black -> bedroom
+- yellow -> kitchen
+
+While is unknown the position, that will be stored during the substate TRACK whenever a new ball is detected.
 
 ### Software architecture
 
+The main blocks of the software architecture are the following.
+
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/architecture.png" alt=" " width="600" height="400"/>
 
-
+For a more complete architecture, write in the shell the following command :
+```
+$ rqt_graph
+```
+to see the nodes and active topics in that precise moment of the simulation.
 ### Packages and file list
 
 
