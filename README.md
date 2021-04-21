@@ -31,6 +31,7 @@ While is unknown the position, that will be stored during the substate TRACK whe
 ### Software architecture
 
 The main blocks of the software architecture are the following.
+All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection is basically not active because we don't want to track anything.
 
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/architecture.png" alt=" " width="600" height="400"/>
 
