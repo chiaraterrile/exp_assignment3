@@ -2,14 +2,17 @@
 
 ### Introduction
 This project is based on the navigation of a wheeled robot in an enviroment with walls (obstacles) and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
+
+<img src="enviroment.png" alt="My cool logo" width="600" height="400"/>
+
+
 ### Software architecture
 
-<p align="center">
-  <img src="Architecture.png" width="350" title="hover text">
-  <img src="Architecture.png" width="350" alt="accessibility text">
-</p>
+<img src="Architecture.png" alt="My cool logo" width="600" height="400"/>
+
 
 ### Packages and file list
+
 
 
 ### Installation and running procedure
