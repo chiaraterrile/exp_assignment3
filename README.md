@@ -21,7 +21,7 @@ In the substate **TRACK**, the robot recogizes an object and its color, then it 
 
 ### Software architecture
 
-<img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
+<img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/architecture.png" alt=" " width="600" height="400"/>
 
 
 ### Packages and file list
