@@ -67,7 +67,7 @@ class image_feature:
     def __init__(self):
         global GoDetection
         '''Initialize ros publisher, ros subscriber'''
-        rospy.init_node('object_detection', anonymous=True)
+        rospy.init_node('object_detection')
         # topic where we publish
         self.image_pub = rospy.Publisher("/output/image_raw/compressed",
                                          CompressedImage, queue_size=1)
