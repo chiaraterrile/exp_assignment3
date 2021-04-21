@@ -1,7 +1,7 @@
 # exp_assignment3
 
 ### Introduction
-
+This project is based on the navigation of a wheeled robot in an enviroment with walls (obstacles) and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
 ### Software architecture
 
 <p align="center">
