@@ -5,6 +5,19 @@ This project is based on the navigation of a wheeled robot in an enviroment with
 
 <img src="enviroment.png" alt="My cool logo" width="600" height="400"/>
 
+### Robot's behaviours
+
+The robot has four main states (behaviour) :
+* **SLEEP** : in this state the robot goes to a fixed position (in this case is the origin (0,0,0)) where is the home. Once reached the home, the robot stays there for a certain amount of time and then switches to NORMAL behaviour.
+* **NORMAL** : in this state the robot goes in random positions and every time it detects a new object it switches to the substate TRACK. If nothing has been found, once reached the location, the robot can switch to NORMAL again, or to SLEEP.
+* **PLAY** : the robot goes in this state whenever it receives a command *play* by the user. When in this state, the robot goes to the user position (which is fixed) and waits for a GoTo command. When a GoTo command is received, if the location is known, the robot reaches that location and then comes back to the user, waiting for another command. If the locations is unknown, the robot switches to the state FIND.
+* **FIND** : in this states the robot moves in  the enviroment, exploring it, and looking for new objects. when it detects a new one, switches in the substate TRACK and if the object correspond to the desired location returns in the PLAY state, otherwise it keeps looking. If after some time the location is not found, it returns anyway to the PLAY state where it will wait for a new command.
+
+In the substate **TRACK**, the robot recogizes an object and its color, then it reaches the object and stores information about its position.
+
+**Note.** In all this states, while the robot is moving, it keeps avoiding obstacles using gmapping algorthm.
+
+
 
 ### Software architecture
 
