@@ -59,7 +59,19 @@ to see the nodes and active topics in that precise moment of the simulation.
 
 The only package for this project is _exp_assignment3_.
 
-In 
+In the package there are the followinf folders :
+- **config** where there is che configuration file for RViz
+- **explore** which is the folder for launching the explore_lite package
+- **launch** where there are all the launch files for the simulation
+- **msg** where there are the two messages _ball.msg_ for the pub/sub communication between Object Detection and State Machine nodes and _command.msg_ for the pub/sub communication between GoTo and State Machine nodes
+- **param** where there are all the files containing the parameters for move_base, local planning and the costmap 
+- **scripts** where there are the scripts of all the nodes used :
+    - _state_machine.py_ which is the node of the State Machine
+    - _object_detection.py_ which is the node for the Object Detection
+    - _play.py_ which is the node for Play
+    - _GoTo.py_ which is the node for GoTo
+ - **urdf** where there are all the .urdf, .gazebo and .xacro that describe the robot with its sensors and the human
+ - **worlds** where is the file_ house2.world_ that describes the simulation enviroment
 
 ### Installation and running procedure
 To run the simulation it's necessary to put the package in a ROS workspace and then in the terminal run:
@@ -77,21 +89,31 @@ An alternative command to launch the simulation, is to type :
 ```
 $ ./sim.sh
 ```
-in order to kill all the processes before launching the file and avoide problems with Gazebo. (Be sure to be in the folder _exp_assignment3_ before launching this command in the terminal)
+in order to kill all the processes before launching the file and avoide problems with Gazebo. (Be sure to be in the directory _exp_assignment3_ before launching this command in the terminal)
 
 Whenever the user want to make the robot go in the Play state:
 ```
 $ roslaunch exp_assignment3 play.py
 ```
-And to send a GoTo+location command :
+And to send a _GoTo + location_ command :
 ```
 $ roslaunch exp_assignment3 GoTo.py
 ```
 After launching this file, it will be asked to the user to insert a location that will be the one that the robot will have to reach or find.
 
 ### System's limitations
+One limitation of the system is related to the fact that the Object Detection node is always active (but in stand-by when in Play or Sleep state), so during the Normal state the topic /new_ball_detected is continuously subscribed and if the flag is true it switches in the substate Track. The problem is that in this case, the Move Base Action Server in not shut down, it is still active, but it is like if the object detection had an higher priority, so the robot first reaches the ball and then come back to reach the goal. This is not a problem, except for the case in which the robot, while tracking the ball, follows a trajectory where there is the goal for the Action Server. In this case, the robot keeps tracking tha ball but switches at the same time to the next state of the Normal state. 
+So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn't detecting anything and the Tracking is interrupted. 
+
+This aspect represents a problem because in this case, the colored ball is intended as 'already detected', but the robot has not reached it and stored information about its position, and the result is that the ball won't be followed again, beacuse in the code is intended as known, even if it isn't.
+
+I have "solved" this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn't switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball's position.
 
 ### Possible technical improvements
+A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking. 
+
+Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster and to make the response of the Action Server faster too, but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient, without risking the robot to remain stacked somewhere, as in some rare cases happens (depending on the direction that is following and on the wall positions).
+
 
 ### Author and contact
 Terrile Chiara
