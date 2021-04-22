@@ -68,18 +68,26 @@ $ catkin_make
 ```
 Then to launch the simulation:
 ```
-$ roslaunch exp_assignment2 gazebo_world.launch
+$ roslaunch exp_assignment3 simulation.launch
 ```
-In another terminal to run the state machine :
-```
-$ rosrun exp_assignment2 state_machine.py
-```
-Whenever the user want to make the robot interact with the ball in another terminal has to run :
-```
-$ rostopic pub /reaching_goal/goal....
-```
-in order to send the message to the action server of the ball and position it in the desired position. To make the ball disappear the user has simply to set the z-coordinate of the position to a negative value.
+this command lauches the Gazebo simulation, RViz, the Object Detection node, Gmapping + MoveBase for the navigation with obstacle avoidance, and the State Machine node.
 
+An alternative command to launch the simulation, is to type :
+
+```
+$ ./sim.sh
+```
+in order to kill all the processes before launching the file and avoide problems with Gazebo. (Be sure to be in the folder _exp_assignment3_ before launching this command in the terminal)
+
+Whenever the user want to make the robot go in the Play state:
+```
+$ roslaunch exp_assignment3 play.py
+```
+And to send a GoTo+location command :
+```
+$ roslaunch exp_assignment3 GoTo.py
+```
+After launching this file, it will be asked to the user to insert a location that will be the one that the robot will have to reach or find.
 
 ### System's limitations
 
