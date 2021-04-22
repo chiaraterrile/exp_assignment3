@@ -86,7 +86,6 @@ room5 = Room(location = "bathroom",color="magenta",known = False)
 room6 = Room(location = "bedroom",color="black",known = False)
 ## variable for the timer in the FIND state
 t_final = 0
-actual_state = ' '
 
 
 
@@ -158,55 +157,42 @@ def clbk_ball_info(msg):
         color_found = ball_info.color
         # for each room check if the color is the one of the new object
         # if it is, assign to the corresponding room the xy coordinates, and set the flag known to true
-        # first check det in order to print the message just one time i.e. when the robot is near the ball (beacuse after this moment det become false) and then exit from this callback because det is false and this topic is no more subscribed
-        #if det :
 
-       # time.sleep(2)
         if color_found == room1.color:
-                
-                #rospy.loginfo ('Found %s',room1.location)
+ 
                 room1 = Room(location = "entrance",color="blue",known = True,  x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det = False 
                 room_track = room1
                 
                 
 
 
         elif color_found == room2.color:
-                
-                #rospy.loginfo ('Found %s',room2.location)
+
                 room2 = Room(location = "closet",color="red",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det =  False
                 room_track = room2
                 
                 
 
         elif color_found ==room3.color:
-                
-                #rospy.loginfo ('Found %s',room3.location)
+
                 room3 = Room(location = "living room",color="green",known = True ,x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det = False 
                 room_track = room3
                 
 
         elif color_found == room4.color:
-                
-                #rospy.loginfo ('Found %s',room4.location)
+
                 room4 = Room(location = "kitchen",color="yellow",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det = False 
                 room_track = room4
         
 
         elif color_found == room5.color:
                 
-                #rospy.loginfo ('Found %s',room5.location)
                 room5 = Room(location = "bathroom",color="magenta",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det = False 
                 room_track = room5
                 
 
@@ -214,15 +200,12 @@ def clbk_ball_info(msg):
 
         elif color_found == room6.color:
                         
-                #rospy.loginfo ('Found %s',room6.location)
                 room6 = Room(location = "bedroom",color="black",known = True, x = ball_info.x, y = ball_info.y)
                 ball_info = ball()
-                #det = False 
                 room_track = room6
                 
         
-        # if we are in the FIND state, check if the new room is the desired location
-        # assigns a value to the flag FoundLocation and if it is false, put to true the flag for launching the exploration
+        
         
                         
                                 
@@ -250,6 +233,8 @@ def clbk_track(msg):
                 msg.data = None
                 rospy.loginfo ('Found %s',room_track.location)
 
+                # if we are in the FIND state, check if the new room is the desired location
+                # assigns a value to the flag FoundLocation and if it is false, put to true the flag for launching the exploration
                 if FindState :
                         if desired_location == room_track.location :
                                 rospy.loginfo('I have found the desired location!')
@@ -265,6 +250,7 @@ def clbk_track(msg):
                                 TrackOnDoing = False 
                                 rospy.loginfo ('Back to NORMAL state')
                                 print('I am moving to random position : ', desired_position_normal)
+                # re-initialize the variable of the room, to be sure that for the next ball detected the old location is no more there
                 room_track = Room()
                 
 
@@ -320,11 +306,14 @@ class Normal(smach.State):
         """
         global TrackOnDoing,desired_position_normal,det ,ball_info,flag_play,room1,room2,room3,room4,room5,room6,GoDetection
 
-        desired_position_normal = coordinates_generator()
+        desired_position_normal = coordinates_generator() 
+        desired_orientation_normal = 1
+
+        # the below lines have been used for testing
         #desired_position_normal = Point()
         #desired_position_normal.x = -1
         #desired_position_normal.y = 7
-        desired_orientation_normal = 1
+        
 
         TrackOnDoing = False  
         print('I am moving to random position : ', desired_position_normal)
@@ -336,9 +325,7 @@ class Normal(smach.State):
 
         Move(desired_position_normal,desired_orientation_normal)
 
-        #print('I am arrived! ')
         print('I am arrived')
-        #self.sub.unregister()
         return user_action()
        
         
