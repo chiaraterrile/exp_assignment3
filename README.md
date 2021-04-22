@@ -1,7 +1,7 @@
 # exp_assignment3
 
 ### Introduction
-This project is based on the navigation of a wheeled robot in an enviroment with walls (obstacles) and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
+This project is based on the navigation of a wheeled robot (with an RGB camera and a laser) in an enviroment with walls and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
 
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/enviroment.png" alt=" " width="600" height="400"/>
 
