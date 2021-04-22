@@ -31,9 +31,20 @@ While is unknown the position, that will be stored during the substate TRACK whe
 ### Software architecture
 
 The main blocks of the software architecture are the following.
-All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection is basically not active because we don't want to track anything.
-
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/architecture.png" alt=" " width="600" height="400"/>
+
+All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
+
+The State Machine, according to the state in which is, send a Goal to the Move Base Action server, in order to reach that position (that can be home position, random position or user position). In instead the robot is in the Find state, the Explore node is launched. This node works with the _explore_lite_ package and allows the robot to explore the unkwnown enviroment. 
+
+Of course, since there are walls in the enviroment, the robot should avoid them, and to obtain this, is used the block Slam Gmapping, which considering the  informations obtained by the laser, sends the transformations frames to both Move Base and to the Explore blocks.
+
+The Object Detection node, instead communicates to the State Machine whenever a new ball (a not already detected one) is found in the enviroment while moving in Normal or in Find behaviour.
+This node also communicates to the State Machine the informations about a new detected object, which are about the ball's position and about its color.
+
+When the user wants to send a _play_ command, is launched the node Play, that communicates to the State Machine that needs to switch to the Play state.
+
+Instad, when the user wants to send a _GoTo_ command, is launched the node GoTo that communicates to the State Machine a GoTo + location command.
 
 For a more complete architecture, write in the shell the following command :
 ```
