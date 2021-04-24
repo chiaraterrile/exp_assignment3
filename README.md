@@ -1,4 +1,4 @@
-# exp_assignment3
+# Final assignment of ExpRob
 
 ### Introduction
 This project is based on the navigation of a wheeled robot (with an RGB camera and a laser) in an enviroment with walls and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
