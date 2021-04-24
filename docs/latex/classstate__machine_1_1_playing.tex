@@ -1,0 +1,80 @@
+\hypertarget{classstate__machine_1_1_playing}{}\doxysection{state\+\_\+machine.\+Playing Class Reference}
+\label{classstate__machine_1_1_playing}\index{state\_machine.Playing@{state\_machine.Playing}}
+
+
+Define the \mbox{\hyperlink{classstate__machine_1_1_playing}{Playing}} state ~\newline
+  
+
+
+Inheritance diagram for state\+\_\+machine.\+Playing\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classstate__machine_1_1_playing}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_playing_a0274e6dde7ceb62558bd2f08d6215eae}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self)
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_playing_aeebcb7679fa0f7380e52b7b63bb9e8cf}{execute}} (self, userdata)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classstate__machine_1_1_playing}{Playing}} state execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classstate__machine_1_1_playing_ac1fad3e7805ddf70f2a48904696ddae1}{pub\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in N\+O\+R\+M\+AL or F\+I\+ND) or not \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Define the \mbox{\hyperlink{classstate__machine_1_1_playing}{Playing}} state ~\newline
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_playing_a0274e6dde7ceb62558bd2f08d6215eae}\label{classstate__machine_1_1_playing_a0274e6dde7ceb62558bd2f08d6215eae}} 
+\index{state\_machine.Playing@{state\_machine.Playing}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!state\_machine.Playing@{state\_machine.Playing}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Playing.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_playing_aeebcb7679fa0f7380e52b7b63bb9e8cf}\label{classstate__machine_1_1_playing_aeebcb7679fa0f7380e52b7b63bb9e8cf}} 
+\index{state\_machine.Playing@{state\_machine.Playing}!execute@{execute}}
+\index{execute@{execute}!state\_machine.Playing@{state\_machine.Playing}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Playing.\+execute (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{userdata }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{classstate__machine_1_1_playing}{Playing}} state execution. 
+
+\hypertarget{namespacestate__machine_Description}{}\doxysubsection{Description}\label{namespacestate__machine_Description}
+In this state the robot goes to the user position and waits for a \mbox{\hyperlink{namespace_go_to}{Go\+To}} command by the user. It waits the command for a certain amount of time, if it is not received exits from the P\+L\+AY state. When a \mbox{\hyperlink{namespace_go_to}{Go\+To}} command is received, is checked if the location in the command is known. If it is known, the robot simply goes there, and then come back to the play state. ( so back to the user waiting for another \mbox{\hyperlink{namespace_go_to}{Go\+To}} command). If the location is unknown, the robot switches to the F\+I\+ND behaviour.
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} in case of absence of \mbox{\hyperlink{namespace_go_to}{Go\+To}} commands 
+
+Play state when the desired location has been found 
+
+\mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state when the location is unknown 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_playing_ac1fad3e7805ddf70f2a48904696ddae1}\label{classstate__machine_1_1_playing_ac1fad3e7805ddf70f2a48904696ddae1}} 
+\index{state\_machine.Playing@{state\_machine.Playing}!pub\_state@{pub\_state}}
+\index{pub\_state@{pub\_state}!state\_machine.Playing@{state\_machine.Playing}}
+\doxysubsubsection{\texorpdfstring{pub\_state}{pub\_state}}
+{\footnotesize\ttfamily state\+\_\+machine.\+Playing.\+pub\+\_\+state}
+
+
+
+publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in N\+O\+R\+M\+AL or F\+I\+ND) or not 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+scripts/\mbox{\hyperlink{state__machine_8py}{state\+\_\+machine.\+py}}\end{DoxyCompactItemize}

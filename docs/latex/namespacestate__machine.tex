@@ -1,0 +1,370 @@
+\hypertarget{namespacestate__machine}{}\doxysection{state\+\_\+machine Namespace Reference}
+\label{namespacestate__machine}\index{state\_machine@{state\_machine}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classstate__machine_1_1_coordinates}{Coordinates}}
+\begin{DoxyCompactList}\small\item\em This class contains the fixed positions for the \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} behaviour and of the user. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}
+\begin{DoxyCompactList}\small\item\em Define the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state ~\newline
+ \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}}
+\begin{DoxyCompactList}\small\item\em Define the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classstate__machine_1_1_play}{Play}}
+\begin{DoxyCompactList}\small\item\em Define the Playing state ~\newline
+ \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}
+\begin{DoxyCompactList}\small\item\em This is class for storing informations about the rooms in the enviroment and it can have all the desired fields. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}}
+\begin{DoxyCompactList}\small\item\em Define the \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacestate__machine_a1d56e55c921483fe06ba81b238684a5d}{coordinates\+\_\+generator}} ()
+\begin{DoxyCompactList}\small\item\em This function is used to generate the random coordinates for the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} behaviour. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_af7167e9334d170d48f5f8af5721a8296}{Move}} (position, yaw)
+\begin{DoxyCompactList}\small\item\em This funcion implements the Move\+Base\+Action server having as input the desired location (x and y) and the orientation. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_abab8e7306ff6867c16f5ae03abd14c64}{clbk\+\_\+play}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback is used to check whether or not a command play is received. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_a674da3b9e8c246998abb7494a5772beb}{clbk\+\_\+go}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback is used to save the message sent by the user (the \mbox{\hyperlink{namespace_go_to}{Go\+To}} + location command) \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_ab0bcb96a7b84cf24d97e470bc95f7db3}{clbk\+\_\+ball\+\_\+info}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback is used to save the informations received by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}} node. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_a4e1bb3b8e5a6bd4ba52fa98db49b8d14}{clbk\+\_\+track}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback is used to check whether or not a new object has been detected by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}}. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_afaa99f0eebff6571a958fcc827c6a367}{user\+\_\+action}} ()
+\begin{DoxyCompactList}\small\item\em this function controls the next state of the F\+SM (in the N\+O\+R\+M\+AL state) according to the action of the user. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacestate__machine_a5c680ce705e6052fa07c6cece21743d0}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacestate__machine_aa1b704078efcb92a52e5d40beb054eae}{Go\+Detection}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if is possible to go in the substate Track (set to true only in state \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_a68c462c2a4fc12638739e37a4788b769}{Launch\+Exploration}} = True
+\begin{DoxyCompactList}\small\item\em flag that indicates if is possible to launch the explore\+\_\+lite node (used to avoid the node to be continuosly launched when we are in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_a245d50c110a7f9a18f84230f2ae6f3e5}{Find\+State}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if the robot is in the F\+I\+ND state (used in the case of the substate Track to differentiate the behaviour from the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_ab051e268f3d902c032f3d2bb5939f767}{det}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if a new object has been detected if in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_aff716b5770e9a844b416767c01c725fd}{flag\+\_\+play}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if a command \textquotesingle{}play\textquotesingle{} has been given by the user \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_a16e0cf64953a42184aabc15ebdb0e0ee}{Found\+Location}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state the desired location has been found \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_af6357cbdd6344c3a06f32b58629bf6b2}{Track\+On\+Doing}} = False
+\begin{DoxyCompactList}\small\item\em flag that idicates if the robot is tracking a ball in order to avoid returning sleep if the robot reaches the target in the mean time \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_aee0eb17b7439375307f6b59997dd1751}{Normal\+State}} = False
+\begin{DoxyCompactList}\small\item\em Flag that idicates if the robot is in the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state, that is the only state from which the robot can switch to \mbox{\hyperlink{classstate__machine_1_1_play}{Play}} state if the command is received by the user. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{namespacestate__machine_a095c56015278bbe73b391a68b26fe39a}{desired\+\_\+location}} = \textquotesingle{} \textquotesingle{}
+\begin{DoxyCompactList}\small\item\em variable that contains the desired location given by the \mbox{\hyperlink{namespace_go_to}{Go\+To}} command \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_a4f6ae4d34a7f2cb9b3d2dd09a9b026cc}{child}} = None
+\begin{DoxyCompactList}\small\item\em variable to launch and stop the node explore\+\_\+lite \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_a68387d116e4041f4ef7e8eb7d4ec66ce}{ball\+\_\+info}} = ball()
+\begin{DoxyCompactList}\small\item\em variable that contains informations about the ball position (found during the object detection) and its color ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_ad1f11315c655ff7a0ee84163d8cd9e5f}{command\+\_\+play}} = command()
+\begin{DoxyCompactList}\small\item\em variable that contains the command given by the user ( \mbox{\hyperlink{namespace_go_to}{Go\+To}} command + desired location) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_a138c90d2a9e9408e7610b504cf54d789}{room\+\_\+track}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}()
+\begin{DoxyCompactList}\small\item\em variable that contains informations (color, location, coordinates ...) about the object that the robot is tracking during the substate Track \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_aae021dec2d9f207831284e10d64dc3ae}{room1}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}entrance\char`\"{},color=\char`\"{}blue\char`\"{},known = False)
+\begin{DoxyCompactList}\small\item\em variables of the six rooms with their informations \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacestate__machine_a002853a9c4208ff15959e6451d2560d3}{room2}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}closet\char`\"{},color=\char`\"{}red\char`\"{},known = False)
+\item 
+\mbox{\hyperlink{namespacestate__machine_a1ac0a77560cfb4c582c88d745c0cc114}{room3}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}living room\char`\"{},color=\char`\"{}green\char`\"{},known = False)
+\item 
+\mbox{\hyperlink{namespacestate__machine_aa5273e6ab37a553f040a1f5511630527}{room4}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}kitchen\char`\"{},color=\char`\"{}yellow\char`\"{},known = False)
+\item 
+\mbox{\hyperlink{namespacestate__machine_a6a2cba6358d0ec061761cda9d230437c}{room5}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}bathroom\char`\"{},color=\char`\"{}magenta\char`\"{},known = False)
+\item 
+\mbox{\hyperlink{namespacestate__machine_a1013bea7b46c774c3de22613ddd11a99}{room6}} = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}bedroom\char`\"{},color=\char`\"{}black\char`\"{},known = False)
+\item 
+int \mbox{\hyperlink{namespacestate__machine_a27f104881724099137d40337576e66e8}{t\+\_\+final}} = 0
+\begin{DoxyCompactList}\small\item\em variable for the timer in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacestate__machine_a8b1913f94c64745cffa6fd2062e38f74}{V\+E\+R\+B\+O\+SE}} = False
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{namespacestate__machine_Description}{}\doxysubsection{Description}\label{namespacestate__machine_Description}
+This scripts is a R\+OS node that implements a F\+SM that according to what detects the camera or to the user action switches to one state or another 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacestate__machine_ab0bcb96a7b84cf24d97e470bc95f7db3}\label{namespacestate__machine_ab0bcb96a7b84cf24d97e470bc95f7db3}} 
+\index{state\_machine@{state\_machine}!clbk\_ball\_info@{clbk\_ball\_info}}
+\index{clbk\_ball\_info@{clbk\_ball\_info}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{clbk\_ball\_info()}{clbk\_ball\_info()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+clbk\+\_\+ball\+\_\+info (\begin{DoxyParamCaption}\item[{}]{msg }\end{DoxyParamCaption})}
+
+
+
+This callback is used to save the informations received by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}} node. 
+
+\mbox{\Hypertarget{namespacestate__machine_a674da3b9e8c246998abb7494a5772beb}\label{namespacestate__machine_a674da3b9e8c246998abb7494a5772beb}} 
+\index{state\_machine@{state\_machine}!clbk\_go@{clbk\_go}}
+\index{clbk\_go@{clbk\_go}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{clbk\_go()}{clbk\_go()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+clbk\+\_\+go (\begin{DoxyParamCaption}\item[{}]{msg }\end{DoxyParamCaption})}
+
+
+
+This callback is used to save the message sent by the user (the \mbox{\hyperlink{namespace_go_to}{Go\+To}} + location command) 
+
+\mbox{\Hypertarget{namespacestate__machine_abab8e7306ff6867c16f5ae03abd14c64}\label{namespacestate__machine_abab8e7306ff6867c16f5ae03abd14c64}} 
+\index{state\_machine@{state\_machine}!clbk\_play@{clbk\_play}}
+\index{clbk\_play@{clbk\_play}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{clbk\_play()}{clbk\_play()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+clbk\+\_\+play (\begin{DoxyParamCaption}\item[{}]{msg }\end{DoxyParamCaption})}
+
+
+
+This callback is used to check whether or not a command play is received. 
+
+If flag\+\_\+play is set to true, the move\+\_\+base action is cancelled (only if in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state) \mbox{\Hypertarget{namespacestate__machine_a4e1bb3b8e5a6bd4ba52fa98db49b8d14}\label{namespacestate__machine_a4e1bb3b8e5a6bd4ba52fa98db49b8d14}} 
+\index{state\_machine@{state\_machine}!clbk\_track@{clbk\_track}}
+\index{clbk\_track@{clbk\_track}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{clbk\_track()}{clbk\_track()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+clbk\+\_\+track (\begin{DoxyParamCaption}\item[{}]{msg }\end{DoxyParamCaption})}
+
+
+
+This callback is used to check whether or not a new object has been detected by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}}. 
+
+If this is true ( det = True) the robot goes in the substate T\+R\+A\+CK and subscirbe to the topic /ball\+\_\+info to get the coordinates and the color of the object \mbox{\Hypertarget{namespacestate__machine_a1d56e55c921483fe06ba81b238684a5d}\label{namespacestate__machine_a1d56e55c921483fe06ba81b238684a5d}} 
+\index{state\_machine@{state\_machine}!coordinates\_generator@{coordinates\_generator}}
+\index{coordinates\_generator@{coordinates\_generator}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{coordinates\_generator()}{coordinates\_generator()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+coordinates\+\_\+generator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function is used to generate the random coordinates for the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} behaviour. 
+
+(coordinates are chosen among several points that are in the map) \begin{DoxyReturn}{Returns}
+a random position of type Point() 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacestate__machine_a5c680ce705e6052fa07c6cece21743d0}\label{namespacestate__machine_a5c680ce705e6052fa07c6cece21743d0}} 
+\index{state\_machine@{state\_machine}!main@{main}}
+\index{main@{main}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacestate__machine_af7167e9334d170d48f5f8af5721a8296}\label{namespacestate__machine_af7167e9334d170d48f5f8af5721a8296}} 
+\index{state\_machine@{state\_machine}!Move@{Move}}
+\index{Move@{Move}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{Move()}{Move()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Move (\begin{DoxyParamCaption}\item[{}]{position,  }\item[{}]{yaw }\end{DoxyParamCaption})}
+
+
+
+This funcion implements the Move\+Base\+Action server having as input the desired location (x and y) and the orientation. 
+
+\hypertarget{namespacestate__machine_autotoc_md10}{}\doxysubsubsection{Parameters}\label{namespacestate__machine_autotoc_md10}
+position \+: Point() coordinates of the goal
+
+yaw \+: Float64 Orientation of the goal \mbox{\Hypertarget{namespacestate__machine_afaa99f0eebff6571a958fcc827c6a367}\label{namespacestate__machine_afaa99f0eebff6571a958fcc827c6a367}} 
+\index{state\_machine@{state\_machine}!user\_action@{user\_action}}
+\index{user\_action@{user\_action}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{user\_action()}{user\_action()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+user\+\_\+action (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+this function controls the next state of the F\+SM (in the N\+O\+R\+M\+AL state) according to the action of the user. 
+
+\begin{DoxyReturn}{Returns}
+play if the flag\+\_\+play is True 
+
+normal if in substate Track 
+
+normal or sleep otherwise 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacestate__machine_a68387d116e4041f4ef7e8eb7d4ec66ce}\label{namespacestate__machine_a68387d116e4041f4ef7e8eb7d4ec66ce}} 
+\index{state\_machine@{state\_machine}!ball\_info@{ball\_info}}
+\index{ball\_info@{ball\_info}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{ball\_info}{ball\_info}}
+{\footnotesize\ttfamily state\+\_\+machine.\+ball\+\_\+info = ball()}
+
+
+
+variable that contains informations about the ball position (found during the object detection) and its color ~\newline
+ 
+
+\mbox{\Hypertarget{namespacestate__machine_a4f6ae4d34a7f2cb9b3d2dd09a9b026cc}\label{namespacestate__machine_a4f6ae4d34a7f2cb9b3d2dd09a9b026cc}} 
+\index{state\_machine@{state\_machine}!child@{child}}
+\index{child@{child}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{child}{child}}
+{\footnotesize\ttfamily state\+\_\+machine.\+child = None}
+
+
+
+variable to launch and stop the node explore\+\_\+lite 
+
+\mbox{\Hypertarget{namespacestate__machine_ad1f11315c655ff7a0ee84163d8cd9e5f}\label{namespacestate__machine_ad1f11315c655ff7a0ee84163d8cd9e5f}} 
+\index{state\_machine@{state\_machine}!command\_play@{command\_play}}
+\index{command\_play@{command\_play}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{command\_play}{command\_play}}
+{\footnotesize\ttfamily state\+\_\+machine.\+command\+\_\+play = command()}
+
+
+
+variable that contains the command given by the user ( \mbox{\hyperlink{namespace_go_to}{Go\+To}} command + desired location) 
+
+\mbox{\Hypertarget{namespacestate__machine_a095c56015278bbe73b391a68b26fe39a}\label{namespacestate__machine_a095c56015278bbe73b391a68b26fe39a}} 
+\index{state\_machine@{state\_machine}!desired\_location@{desired\_location}}
+\index{desired\_location@{desired\_location}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{desired\_location}{desired\_location}}
+{\footnotesize\ttfamily string state\+\_\+machine.\+desired\+\_\+location = \textquotesingle{} \textquotesingle{}}
+
+
+
+variable that contains the desired location given by the \mbox{\hyperlink{namespace_go_to}{Go\+To}} command 
+
+\mbox{\Hypertarget{namespacestate__machine_ab051e268f3d902c032f3d2bb5939f767}\label{namespacestate__machine_ab051e268f3d902c032f3d2bb5939f767}} 
+\index{state\_machine@{state\_machine}!det@{det}}
+\index{det@{det}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{det}{det}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+det = False}
+
+
+
+flag that indicates if a new object has been detected if in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state 
+
+\mbox{\Hypertarget{namespacestate__machine_a245d50c110a7f9a18f84230f2ae6f3e5}\label{namespacestate__machine_a245d50c110a7f9a18f84230f2ae6f3e5}} 
+\index{state\_machine@{state\_machine}!FindState@{FindState}}
+\index{FindState@{FindState}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{FindState}{FindState}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Find\+State = False}
+
+
+
+flag that indicates if the robot is in the F\+I\+ND state (used in the case of the substate Track to differentiate the behaviour from the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state) 
+
+\mbox{\Hypertarget{namespacestate__machine_aff716b5770e9a844b416767c01c725fd}\label{namespacestate__machine_aff716b5770e9a844b416767c01c725fd}} 
+\index{state\_machine@{state\_machine}!flag\_play@{flag\_play}}
+\index{flag\_play@{flag\_play}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{flag\_play}{flag\_play}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+flag\+\_\+play = False}
+
+
+
+flag that indicates if a command \textquotesingle{}play\textquotesingle{} has been given by the user 
+
+\mbox{\Hypertarget{namespacestate__machine_a16e0cf64953a42184aabc15ebdb0e0ee}\label{namespacestate__machine_a16e0cf64953a42184aabc15ebdb0e0ee}} 
+\index{state\_machine@{state\_machine}!FoundLocation@{FoundLocation}}
+\index{FoundLocation@{FoundLocation}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{FoundLocation}{FoundLocation}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Found\+Location = False}
+
+
+
+flag that indicates if in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state the desired location has been found 
+
+\mbox{\Hypertarget{namespacestate__machine_aa1b704078efcb92a52e5d40beb054eae}\label{namespacestate__machine_aa1b704078efcb92a52e5d40beb054eae}} 
+\index{state\_machine@{state\_machine}!GoDetection@{GoDetection}}
+\index{GoDetection@{GoDetection}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{GoDetection}{GoDetection}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Go\+Detection = False}
+
+
+
+flag that indicates if is possible to go in the substate Track (set to true only in state \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) 
+
+\mbox{\Hypertarget{namespacestate__machine_a68c462c2a4fc12638739e37a4788b769}\label{namespacestate__machine_a68c462c2a4fc12638739e37a4788b769}} 
+\index{state\_machine@{state\_machine}!LaunchExploration@{LaunchExploration}}
+\index{LaunchExploration@{LaunchExploration}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{LaunchExploration}{LaunchExploration}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Launch\+Exploration = True}
+
+
+
+flag that indicates if is possible to launch the explore\+\_\+lite node (used to avoid the node to be continuosly launched when we are in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state) 
+
+\mbox{\Hypertarget{namespacestate__machine_aee0eb17b7439375307f6b59997dd1751}\label{namespacestate__machine_aee0eb17b7439375307f6b59997dd1751}} 
+\index{state\_machine@{state\_machine}!NormalState@{NormalState}}
+\index{NormalState@{NormalState}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{NormalState}{NormalState}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Normal\+State = False}
+
+
+
+Flag that idicates if the robot is in the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state, that is the only state from which the robot can switch to \mbox{\hyperlink{classstate__machine_1_1_play}{Play}} state if the command is received by the user. 
+
+\mbox{\Hypertarget{namespacestate__machine_aae021dec2d9f207831284e10d64dc3ae}\label{namespacestate__machine_aae021dec2d9f207831284e10d64dc3ae}} 
+\index{state\_machine@{state\_machine}!room1@{room1}}
+\index{room1@{room1}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room1}{room1}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room1 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}entrance\char`\"{},color=\char`\"{}blue\char`\"{},known = False)}
+
+
+
+variables of the six rooms with their informations 
+
+\mbox{\Hypertarget{namespacestate__machine_a002853a9c4208ff15959e6451d2560d3}\label{namespacestate__machine_a002853a9c4208ff15959e6451d2560d3}} 
+\index{state\_machine@{state\_machine}!room2@{room2}}
+\index{room2@{room2}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room2}{room2}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room2 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}closet\char`\"{},color=\char`\"{}red\char`\"{},known = False)}
+
+\mbox{\Hypertarget{namespacestate__machine_a1ac0a77560cfb4c582c88d745c0cc114}\label{namespacestate__machine_a1ac0a77560cfb4c582c88d745c0cc114}} 
+\index{state\_machine@{state\_machine}!room3@{room3}}
+\index{room3@{room3}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room3}{room3}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room3 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}living room\char`\"{},color=\char`\"{}green\char`\"{},known = False)}
+
+\mbox{\Hypertarget{namespacestate__machine_aa5273e6ab37a553f040a1f5511630527}\label{namespacestate__machine_aa5273e6ab37a553f040a1f5511630527}} 
+\index{state\_machine@{state\_machine}!room4@{room4}}
+\index{room4@{room4}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room4}{room4}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room4 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}kitchen\char`\"{},color=\char`\"{}yellow\char`\"{},known = False)}
+
+\mbox{\Hypertarget{namespacestate__machine_a6a2cba6358d0ec061761cda9d230437c}\label{namespacestate__machine_a6a2cba6358d0ec061761cda9d230437c}} 
+\index{state\_machine@{state\_machine}!room5@{room5}}
+\index{room5@{room5}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room5}{room5}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room5 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}bathroom\char`\"{},color=\char`\"{}magenta\char`\"{},known = False)}
+
+\mbox{\Hypertarget{namespacestate__machine_a1013bea7b46c774c3de22613ddd11a99}\label{namespacestate__machine_a1013bea7b46c774c3de22613ddd11a99}} 
+\index{state\_machine@{state\_machine}!room6@{room6}}
+\index{room6@{room6}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room6}{room6}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room6 = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}(location = \char`\"{}bedroom\char`\"{},color=\char`\"{}black\char`\"{},known = False)}
+
+\mbox{\Hypertarget{namespacestate__machine_a138c90d2a9e9408e7610b504cf54d789}\label{namespacestate__machine_a138c90d2a9e9408e7610b504cf54d789}} 
+\index{state\_machine@{state\_machine}!room\_track@{room\_track}}
+\index{room\_track@{room\_track}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{room\_track}{room\_track}}
+{\footnotesize\ttfamily state\+\_\+machine.\+room\+\_\+track = \mbox{\hyperlink{classstate__machine_1_1_room}{Room}}()}
+
+
+
+variable that contains informations (color, location, coordinates ...) about the object that the robot is tracking during the substate Track 
+
+\mbox{\Hypertarget{namespacestate__machine_a27f104881724099137d40337576e66e8}\label{namespacestate__machine_a27f104881724099137d40337576e66e8}} 
+\index{state\_machine@{state\_machine}!t\_final@{t\_final}}
+\index{t\_final@{t\_final}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{t\_final}{t\_final}}
+{\footnotesize\ttfamily int state\+\_\+machine.\+t\+\_\+final = 0}
+
+
+
+variable for the timer in the \mbox{\hyperlink{classstate__machine_1_1_find}{Find}} state 
+
+\mbox{\Hypertarget{namespacestate__machine_af6357cbdd6344c3a06f32b58629bf6b2}\label{namespacestate__machine_af6357cbdd6344c3a06f32b58629bf6b2}} 
+\index{state\_machine@{state\_machine}!TrackOnDoing@{TrackOnDoing}}
+\index{TrackOnDoing@{TrackOnDoing}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{TrackOnDoing}{TrackOnDoing}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+Track\+On\+Doing = False}
+
+
+
+flag that idicates if the robot is tracking a ball in order to avoid returning sleep if the robot reaches the target in the mean time 
+
+\mbox{\Hypertarget{namespacestate__machine_a8b1913f94c64745cffa6fd2062e38f74}\label{namespacestate__machine_a8b1913f94c64745cffa6fd2062e38f74}} 
+\index{state\_machine@{state\_machine}!VERBOSE@{VERBOSE}}
+\index{VERBOSE@{VERBOSE}!state\_machine@{state\_machine}}
+\doxysubsubsection{\texorpdfstring{VERBOSE}{VERBOSE}}
+{\footnotesize\ttfamily bool state\+\_\+machine.\+V\+E\+R\+B\+O\+SE = False}
+

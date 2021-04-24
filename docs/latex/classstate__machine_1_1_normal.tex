@@ -1,0 +1,96 @@
+\hypertarget{classstate__machine_1_1_normal}{}\doxysection{state\+\_\+machine.\+Normal Class Reference}
+\label{classstate__machine_1_1_normal}\index{state\_machine.Normal@{state\_machine.Normal}}
+
+
+Define the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state.  
+
+
+Inheritance diagram for state\+\_\+machine.\+Normal\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classstate__machine_1_1_normal}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_normal_acdbc35a37d0350d7805a628048bc3bed}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self)
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_normal_a2930df5f4890ec4b47b2a8e18f9bff08}{execute}} (self, userdata)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classstate__machine_1_1_normal_a80ddfff3edb771b3f51d25e328a9900b}{sub}}
+\begin{DoxyCompactList}\small\item\em subscriber to the topic /new\+\_\+ball\+\_\+detected, used to check wheter or not a ball has been detected by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}} node \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classstate__machine_1_1_normal_a199f13115473bfe699b8f04219f7f075}{sub\+\_\+play}}
+\begin{DoxyCompactList}\small\item\em subscriber to the topic /play, used to check wheter or not a command play has been received by the user \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classstate__machine_1_1_normal_ad1eac8ef6c3a2d190f57f10f1907ba07}{pub\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) or not \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Define the \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_normal_acdbc35a37d0350d7805a628048bc3bed}\label{classstate__machine_1_1_normal_acdbc35a37d0350d7805a628048bc3bed}} 
+\index{state\_machine.Normal@{state\_machine.Normal}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!state\_machine.Normal@{state\_machine.Normal}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Normal.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_normal_a2930df5f4890ec4b47b2a8e18f9bff08}\label{classstate__machine_1_1_normal_a2930df5f4890ec4b47b2a8e18f9bff08}} 
+\index{state\_machine.Normal@{state\_machine.Normal}!execute@{execute}}
+\index{execute@{execute}!state\_machine.Normal@{state\_machine.Normal}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Normal.\+execute (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{userdata }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} state execution. 
+
+\hypertarget{namespacestate__machine_Description}{}\doxysubsection{Description}\label{namespacestate__machine_Description}
+In this state the robot goes in a random position in the map. This position is passed as input to the function \mbox{\hyperlink{namespacestate__machine_af7167e9334d170d48f5f8af5721a8296}{Move()}} which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment. In the mean time, subscribing to the topic /new\+\_\+ball\+\_\+detected, every time the flag det is set to True, the robot switches to the substate Track. \begin{DoxyReturn}{Returns}
+user\+\_\+action 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_normal_ad1eac8ef6c3a2d190f57f10f1907ba07}\label{classstate__machine_1_1_normal_ad1eac8ef6c3a2d190f57f10f1907ba07}} 
+\index{state\_machine.Normal@{state\_machine.Normal}!pub\_state@{pub\_state}}
+\index{pub\_state@{pub\_state}!state\_machine.Normal@{state\_machine.Normal}}
+\doxysubsubsection{\texorpdfstring{pub\_state}{pub\_state}}
+{\footnotesize\ttfamily state\+\_\+machine.\+Normal.\+pub\+\_\+state}
+
+
+
+publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) or not 
+
+\mbox{\Hypertarget{classstate__machine_1_1_normal_a80ddfff3edb771b3f51d25e328a9900b}\label{classstate__machine_1_1_normal_a80ddfff3edb771b3f51d25e328a9900b}} 
+\index{state\_machine.Normal@{state\_machine.Normal}!sub@{sub}}
+\index{sub@{sub}!state\_machine.Normal@{state\_machine.Normal}}
+\doxysubsubsection{\texorpdfstring{sub}{sub}}
+{\footnotesize\ttfamily state\+\_\+machine.\+Normal.\+sub}
+
+
+
+subscriber to the topic /new\+\_\+ball\+\_\+detected, used to check wheter or not a ball has been detected by the \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}} node 
+
+\mbox{\Hypertarget{classstate__machine_1_1_normal_a199f13115473bfe699b8f04219f7f075}\label{classstate__machine_1_1_normal_a199f13115473bfe699b8f04219f7f075}} 
+\index{state\_machine.Normal@{state\_machine.Normal}!sub\_play@{sub\_play}}
+\index{sub\_play@{sub\_play}!state\_machine.Normal@{state\_machine.Normal}}
+\doxysubsubsection{\texorpdfstring{sub\_play}{sub\_play}}
+{\footnotesize\ttfamily state\+\_\+machine.\+Normal.\+sub\+\_\+play}
+
+
+
+subscriber to the topic /play, used to check wheter or not a command play has been received by the user 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+scripts/\mbox{\hyperlink{state__machine_8py}{state\+\_\+machine.\+py}}\end{DoxyCompactItemize}

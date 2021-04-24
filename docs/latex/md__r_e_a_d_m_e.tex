@@ -1,0 +1,122 @@
+\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysubsection{Introduction}\label{md__r_e_a_d_m_e_autotoc_md1}
+This project is based on the navigation of a wheeled robot (with an R\+GB camera and a laser) in an enviroment with walls and colored balls that correspond to a precise location (e.\+g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
+
+\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysubsection{Robot\textquotesingle{}s behaviours}\label{md__r_e_a_d_m_e_autotoc_md2}
+The robot has four main states (behaviour) \+:
+\begin{DoxyItemize}
+\item {\bfseries{S\+L\+E\+EP}} \+: in this state the robot goes to a fixed position (in this case is the origin (0,0,0)) where is the home. Once reached the home, the robot stays there for a certain amount of time and then switches to N\+O\+R\+M\+AL behaviour.
+\item {\bfseries{N\+O\+R\+M\+AL}} \+: in this state the robot goes in random positions and every time it detects a new object it switches to the substate T\+R\+A\+CK. If nothing has been found, once reached the location, the robot can switch to N\+O\+R\+M\+AL again, or to S\+L\+E\+EP.
+\item {\bfseries{P\+L\+AY}} \+: the robot goes in this state whenever it receives a command {\itshape play} by the user. When in this state, the robot goes to the user position (which is fixed) and waits for a \mbox{\hyperlink{namespace_go_to}{Go\+To}} command. When a \mbox{\hyperlink{namespace_go_to}{Go\+To}} command is received, if the location is known, the robot reaches that location and then comes back to the user, waiting for another command. If the locations is unknown, the robot switches to the state F\+I\+ND.
+\item {\bfseries{F\+I\+ND}} \+: in this states the robot moves in the enviroment, exploring it, and looking for new objects. when it detects a new one, switches in the substate T\+R\+A\+CK and if the object correspond to the desired location returns in the P\+L\+AY state, otherwise it keeps looking. If after some time the location is not found, it returns anyway to the P\+L\+AY state where it will wait for a new command.
+\end{DoxyItemize}
+
+In the substate {\bfseries{T\+R\+A\+CK}}, the robot recogizes an object and its color, then it reaches the object and stores information about its position.
+
+{\bfseries{Note.}} In all this states, while the robot is moving, it keeps avoiding obstacles using gmapping algorithm.
+
+In advance is known the correspondence between a location and the color of the related ball, which is the following \+:
+
+
+\begin{DoxyItemize}
+\item blue -\/$>$ entrance
+\item red -\/$>$ closet
+\item green -\/$>$ living room
+\item magenta -\/$>$ bathroom
+\item black -\/$>$ bedroom
+\item yellow -\/$>$ kitchen
+\end{DoxyItemize}
+
+While is unknown the position, that will be stored during the substate T\+R\+A\+CK whenever a new ball is detected.\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{Software architecture}\label{md__r_e_a_d_m_e_autotoc_md3}
+The main blocks of the software architecture are the following. 
+
+All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-\/by because we don\textquotesingle{}t want to track anything. This is done through a pub/sub communication to the topic \+\_\+/state\+\_\+fsm\+\_\+ with a message of type Bool() that is true when the Object Detection is allowed.
+
+The State Machine, according to the state in which is, send a Goal to the Move Base Action server through the topic \+\_\+/move\+\_\+base\+\_\+, in order to reach that position (that can be home position, random position or user position). In instead the robot is in the Find state, the Explore node is launched. This node works with the {\itshape explore\+\_\+lite} package and allows the robot to explore the unkwnown enviroment.
+
+When in state Play, the Move Base Action Server is interrupted by publishing to the topic \+\_\+/move\+\_\+base/cancel\+\_\+ which basically makes the server finish its task (the server believes to have reached the goal).
+
+Of course, since there are walls in the enviroment, the robot while moving should avoid them, and to obtain this, is used the block Slam Gmapping, which considering the informations obtained by the laser (topic \+\_\+/scan\+\_\+), sends the transformations frames (\+\_\+/tf\+\_\+) to both Move Base and to the Explore blocks.
+
+The Object Detection node, instead communicates to the State Machine whenever a new ball (a not already detected one) is found in the enviroment while moving in Normal or in Find behaviour. This is done with a pub/sub communication to the topic \+\_\+/new\+\_\+ball\+\_\+detected\+\_\+ and the message sent is of type Bool() that is true when a ball is detected.
+
+This node also communicates to the State Machine the informations about the new detected object, which are about the ball\textquotesingle{}s position and about its color. This is done again with a pub/sub communication to the topic \+\_\+/ball\+\_\+info\+\_\+ and message is of type ball(). This type of message has three fields, two for the x and y position and one for the color.
+
+When the user wants to send a {\itshape play} command, is launched the node Play, that communicates to the State Machine that needs to switch to the Play state. This is done thruogh the topic /play and a message of type Bool() is sent.
+
+Instad, when the user wants to send a {\itshape \mbox{\hyperlink{namespace_go_to}{Go\+To}}} command, is launched the node \mbox{\hyperlink{namespace_go_to}{Go\+To}} that communicates to the State Machine a \mbox{\hyperlink{namespace_go_to}{Go\+To}} + location command. This is done through the topic \+\_\+/play\+\_\+command\+\_\+, and the message is of type command(). This message has two fields \+: a go field and a field for the location. This is because the user can send a \mbox{\hyperlink{namespace_go_to}{Go\+To}} command in the field go, but with a wrong location (syntax error or a room not present in our enviroment).
+
+For a more complete architecture, write in the shell the following command \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ rqt\_graph}
+\end{DoxyCode}
+
+
+to see the nodes and active topics in that precise moment of the simulation. \hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsection{Packages and file list}\label{md__r_e_a_d_m_e_autotoc_md4}
+The only package for this project is {\itshape exp\+\_\+assignment3}.
+
+In the package there are the followinf folders \+:
+\begin{DoxyItemize}
+\item {\bfseries{config}} where there is che configuration file for R\+Viz
+\item {\bfseries{explore}} which is the folder for launching the explore\+\_\+lite package
+\item {\bfseries{launch}} where there are all the launch files for the simulation
+\item {\bfseries{msg}} where there are the two messages {\itshape ball.\+msg} for the pub/sub communication between Object Detection and State Machine nodes and {\itshape command.\+msg} for the pub/sub communication between \mbox{\hyperlink{namespace_go_to}{Go\+To}} and State Machine nodes
+\item {\bfseries{param}} where there are all the files containing the parameters for move\+\_\+base, local planning and the costmap
+\item {\bfseries{scripts}} where there are the scripts of all the nodes used \+:
+\begin{DoxyItemize}
+\item {\itshape \mbox{\hyperlink{state__machine_8py}{state\+\_\+machine.\+py}}} which is the node of the State Machine
+\item {\itshape \mbox{\hyperlink{object__detection_8py}{object\+\_\+detection.\+py}}} which is the node for the Object Detection
+\item {\itshape \mbox{\hyperlink{play_8py}{play.\+py}}} which is the node for Play
+\item {\itshape \mbox{\hyperlink{_go_to_8py}{Go\+To.\+py}}} which is the node for \mbox{\hyperlink{namespace_go_to}{Go\+To}}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+{\bfseries{urdf}} where there are all the .urdf, .gazebo and .xacro that describe the robot with its sensors and the human
+\begin{DoxyItemize}
+\item {\bfseries{worlds}} where is the file\+\_\+ house2.\+world\+\_\+ that describes the simulation enviroment
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{Installation and running procedure}\label{md__r_e_a_d_m_e_autotoc_md5}
+To run the simulation it\textquotesingle{}s necessary to put the package in a R\+OS workspace and then in the terminal run\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ catkin\_make}
+\end{DoxyCode}
+
+
+Then to launch the simulation\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ roslaunch exp\_assignment3 simulation.launch}
+\end{DoxyCode}
+
+
+this command lauches the Gazebo simulation, R\+Viz, the Object Detection node, Gmapping + Move\+Base for the navigation with obstacle avoidance, and the State Machine node.
+
+An alternative command to launch the simulation, is to type \+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ ./sim.sh}
+\end{DoxyCode}
+
+
+in order to kill all the processes before launching the file and avoide problems with Gazebo. (Be sure to be in the directory {\itshape exp\+\_\+assignment3} before launching this command in the terminal)
+
+Whenever the user want to make the robot go in the Play state\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ roslaunch exp\_assignment3 play.py}
+\end{DoxyCode}
+
+
+And to send a {\itshape \mbox{\hyperlink{namespace_go_to}{Go\+To}} + location} command \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ roslaunch exp\_assignment3 GoTo.py}
+\end{DoxyCode}
+
+
+After launching this file, it will be asked to the user to insert a location that will be the one that the robot will have to reach or find.\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{System\textquotesingle{}s limitations}\label{md__r_e_a_d_m_e_autotoc_md6}
+One limitation of the system is related to the fact that the Object Detection node is always active (but in stand-\/by when in Play or Sleep state), so during the Normal state the topic /new\+\_\+ball\+\_\+detected is continuously subscribed and if the flag is true it switches in the substate Track. The problem is that in this case, the Move Base Action Server in not shut down, it is still active, but it is like if the object detection had an higher priority, so the robot first reaches the ball and then come back to reach the goal. This is not a problem, except for the case in which the robot, while tracking the ball, follows a trajectory where there is the goal for the Action Server. In this case, the robot keeps tracking tha ball but switches at the same time to the next state of the Normal state. So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn\textquotesingle{}t detecting anything and the Tracking is interrupted.
+
+This aspect represents a problem because in this case, the colored ball is intended as \textquotesingle{}already detected\textquotesingle{}, but the robot has not reached it and stored information about its position, and the result is that the ball won\textquotesingle{}t be followed again, beacuse in the code is intended as known, even if it isn\textquotesingle{}t.
+
+I have \char`\"{}solved\char`\"{} this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn\textquotesingle{}t switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball\textquotesingle{}s position.\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{Possible technical improvements}\label{md__r_e_a_d_m_e_autotoc_md7}
+A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking.
+
+Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster and to make the response of the Action Server faster too, but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient, without risking the robot to remain stacked somewhere, as in some rare cases happens (depending on the direction that is following and on the wall positions).\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsection{Author and contact}\label{md__r_e_a_d_m_e_autotoc_md8}
+Terrile Chiara mail\+: $\ast$$\ast$chiaraterrile97@gmail.com$\ast$$\ast$ 

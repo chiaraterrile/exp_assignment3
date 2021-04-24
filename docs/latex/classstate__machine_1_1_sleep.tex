@@ -1,0 +1,72 @@
+\hypertarget{classstate__machine_1_1_sleep}{}\doxysection{state\+\_\+machine.\+Sleep Class Reference}
+\label{classstate__machine_1_1_sleep}\index{state\_machine.Sleep@{state\_machine.Sleep}}
+
+
+Define the \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} state.  
+
+
+Inheritance diagram for state\+\_\+machine.\+Sleep\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classstate__machine_1_1_sleep}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_sleep_a473b93a1ddf11f9e664d1fb694ce1a3c}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self)
+\item 
+def \mbox{\hyperlink{classstate__machine_1_1_sleep_a89527836f1edcefb6467fa9c041fbbfe}{execute}} (self, userdata)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} state execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classstate__machine_1_1_sleep_a1a5f5d3f50e6ccfe050fdfe9dcafc909}{pub\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) or not \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Define the \mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} state. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_sleep_a473b93a1ddf11f9e664d1fb694ce1a3c}\label{classstate__machine_1_1_sleep_a473b93a1ddf11f9e664d1fb694ce1a3c}} 
+\index{state\_machine.Sleep@{state\_machine.Sleep}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!state\_machine.Sleep@{state\_machine.Sleep}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Sleep.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_sleep_a89527836f1edcefb6467fa9c041fbbfe}\label{classstate__machine_1_1_sleep_a89527836f1edcefb6467fa9c041fbbfe}} 
+\index{state\_machine.Sleep@{state\_machine.Sleep}!execute@{execute}}
+\index{execute@{execute}!state\_machine.Sleep@{state\_machine.Sleep}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily def state\+\_\+machine.\+Sleep.\+execute (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{userdata }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{classstate__machine_1_1_sleep}{Sleep}} state execution. 
+
+\hypertarget{namespacestate__machine_Description}{}\doxysubsection{Description}\label{namespacestate__machine_Description}
+In this state the robot goes in the sleeping position (fixed). This position is passed as input to the function \mbox{\hyperlink{namespacestate__machine_af7167e9334d170d48f5f8af5721a8296}{Move()}} which through an action client makes the robot move in that direction avoiding the obstacles present in the enviroment. \begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classstate__machine_1_1_sleep_a1a5f5d3f50e6ccfe050fdfe9dcafc909}\label{classstate__machine_1_1_sleep_a1a5f5d3f50e6ccfe050fdfe9dcafc909}} 
+\index{state\_machine.Sleep@{state\_machine.Sleep}!pub\_state@{pub\_state}}
+\index{pub\_state@{pub\_state}!state\_machine.Sleep@{state\_machine.Sleep}}
+\doxysubsubsection{\texorpdfstring{pub\_state}{pub\_state}}
+{\footnotesize\ttfamily state\+\_\+machine.\+Sleep.\+pub\+\_\+state}
+
+
+
+publisher to the topic /state\+\_\+fsm, used to indicate if we are in a state that allows the substate Track (possible in \mbox{\hyperlink{classstate__machine_1_1_normal}{Normal}} or \mbox{\hyperlink{classstate__machine_1_1_find}{Find}}) or not 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+scripts/\mbox{\hyperlink{state__machine_8py}{state\+\_\+machine.\+py}}\end{DoxyCompactItemize}

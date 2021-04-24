@@ -1,0 +1,44 @@
+\hypertarget{object__detection_8py}{}\doxysection{scripts/object\+\_\+detection.py File Reference}
+\label{object__detection_8py}\index{scripts/object\_detection.py@{scripts/object\_detection.py}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classobject__detection_1_1image__feature}{object\+\_\+detection.\+image\+\_\+feature}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceobject__detection}{object\+\_\+detection}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespaceobject__detection_a62aa20d9026eca4c0443dc5157ee53d2}{object\+\_\+detection.\+clbk\+\_\+ball\+\_\+pos}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback assigns the informations about the position of the robot (when is near to the ball) to ball\+\_\+pos variable. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceobject__detection_acef235ddfcf78f4cbb4f018ddc6047c4}{object\+\_\+detection.\+clbk\+\_\+state}} (msg)
+\begin{DoxyCompactList}\small\item\em This callback stores the information about the state of the robot assigning a boolean value to the flag Go\+Detection. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceobject__detection_ab7cf54dc8d95278848b962310b69d96e}{object\+\_\+detection.\+main}} (args)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_aa4643ca6bdf280a1295d6e9856c13db7}{object\+\_\+detection.\+V\+E\+R\+B\+O\+SE}} = False
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_a97081205effdbab951fe5408301aadfa}{object\+\_\+detection.\+Go\+Detection}} = False
+\begin{DoxyCompactList}\small\item\em flag that indicates if the robot is in a state that allows the object detection (N\+O\+R\+M\+AL or F\+I\+ND) or not \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceobject__detection_ab168420e8dc72e3ecbd49951a065e815}{object\+\_\+detection.\+red\+\_\+detected}} = False
+\begin{DoxyCompactList}\small\item\em flags that indicate if an object of that color has been already detected or not \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceobject__detection_a9d2ff7096ca353ca0e40b47443d87833}{object\+\_\+detection.\+blue\+\_\+detected}} = False
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_a0f3a31396b8ffec81d5c254078c0666e}{object\+\_\+detection.\+green\+\_\+detected}} = False
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_a3c0850746c62c62b124fc3126828ac22}{object\+\_\+detection.\+black\+\_\+detected}} = False
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_adc4b0a8dd746fe2fbcb8a73a1c196dca}{object\+\_\+detection.\+magenta\+\_\+detected}} = False
+\item 
+bool \mbox{\hyperlink{namespaceobject__detection_a7c546cf8d9d9a4a5e1deb3ea4052bf32}{object\+\_\+detection.\+yellow\+\_\+detected}} = False
+\item 
+\mbox{\hyperlink{namespaceobject__detection_a1895da304755786f9b940d166c461985}{object\+\_\+detection.\+ball\+\_\+pos}} = Point()
+\begin{DoxyCompactList}\small\item\em variable that contains the position of the ball according to the robot\textquotesingle{}s odometry \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceobject__detection_a227517084239ec5edea845390ceb580f}{object\+\_\+detection.\+ball\+\_\+info}} = ball()
+\begin{DoxyCompactList}\small\item\em variable in which are stored the informations about the color of the ball and its position \end{DoxyCompactList}\end{DoxyCompactItemize}
