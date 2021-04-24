@@ -103,9 +103,7 @@ After launching this file, it will be asked to the user to insert a location tha
 
 ### System's limitations
 One limitation of the system is related to the fact that the Object Detection node is always active (but in stand-by when in Play or Sleep state), so during the Normal state the topic /new_ball_detected is continuously subscribed and if the flag is true it switches in the substate Track. The problem is that in this case, the Move Base Action Server in not shut down, it is still active, but it is like if the object detection had an higher priority, so the robot first reaches the ball and then come back to reach the goal. This is not a problem, except for the case in which the robot, while tracking the ball, follows a trajectory where there is the goal for the Action Server. In this case, the robot keeps tracking tha ball but switches at the same time to the next state of the Normal state. 
-So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn't detecting anything and the Tracking is interrupted. 
-
-This aspect represents a problem because in this case, the colored ball is intended as 'already detected', but the robot has not reached it and stored information about its position, and the result is that the ball won't be followed again, beacuse in the code is intended as known, even if it isn't.
+So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn't detecting anything and the Tracking is interrupted.
 
 I have "solved" this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn't switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball's position.
 
