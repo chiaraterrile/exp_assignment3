@@ -1,25 +1,22 @@
 #!/usr/bin/env python
+"""!
+@section Description
+This scripts is a ROS node that implements the object detection of six different colors (red,blue,green,yellow,black and magenta)
+The first time this colored object have been detected, the robot moves towards them and sends informations about their positions and colors to a topic.
 
-# Python libs
+"""
+# Imports
 import sys
 import time
 from nav_msgs.msg import Odometry
 from exp_assignment3.msg import ball
 from geometry_msgs.msg import Point, Twist
-# numpy and scipy
 import numpy as np
 from scipy.ndimage import filters
-
 import imutils
-
-# OpenCV
 import cv2
-
-# Ros libraries
 import roslib
 import rospy
-
-# Ros Messages
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String,Float64
@@ -30,6 +27,7 @@ VERBOSE = False
 
 
 # Global flags
+
 ## flag that indicates if the robot is in a state that allows the object detection (NORMAL or FIND) or not
 GoDetection = False
 ## flags that indicate if an object of that color has been already detected or not
@@ -39,6 +37,8 @@ green_detected = False
 black_detected = False
 magenta_detected = False
 yellow_detected = False
+
+# Global variables
 
 ## variable that contains the position of the ball according to the robot's odometry
 ball_pos = Point()
@@ -373,7 +373,7 @@ class image_feature:
 
                     
                     # only proceed if the radius meets a minimum size
-                    if radius > 8:
+                    if radius > 6:
                         det = True
                         pub_detection.publish(det)
                         rospy.loginfo('I am getting closer to the magenta object')

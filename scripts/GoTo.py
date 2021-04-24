@@ -1,5 +1,9 @@
 #!/usr/bin/env python
+"""!
+@section Description
+This scripts is a ROS node that implements publisher to send a GoTo + location command to another node
 
+"""
 # Imports
 import roslib
 from std_msgs.msg import Bool
