@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['magenta_5fdetected_212',['magenta_detected',['../namespaceobject__detection.html#adc4b0a8dd746fe2fbcb8a73a1c196dca',1,'object_detection']]],
-  ['middle_213',['middle',['../structfrontier__exploration_1_1_frontier.html#a76f982fcee65872b354225b95f00ee5b',1,'frontier_exploration::Frontier']]],
-  ['min_5fdistance_214',['min_distance',['../structfrontier__exploration_1_1_frontier.html#a9d55b8e1c1276ad52d303e350eb01b36',1,'frontier_exploration::Frontier']]]
+  ['pub_5fstate_112',['pub_state',['../classstate__machine_1_1_normal.html#ad1eac8ef6c3a2d190f57f10f1907ba07',1,'state_machine.Normal.pub_state()'],['../classstate__machine_1_1_sleep.html#a1a5f5d3f50e6ccfe050fdfe9dcafc909',1,'state_machine.Sleep.pub_state()'],['../classstate__machine_1_1_play.html#a10eb1a1c7e6fa040b171f6bb361c5cc3',1,'state_machine.Play.pub_state()'],['../classstate__machine_1_1_find.html#a34de9bc11217a91c12c58fe9992c0727',1,'state_machine.Find.pub_state()']]]
 ];

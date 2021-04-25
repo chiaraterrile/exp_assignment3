@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>exp_assignment3: explore/include/explore/frontier_search.h Source File</title>
+<title>Final Project ExpRob: explore/include/explore/frontier_search.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">exp_assignment3
+   <div id="projectname">Final Project ExpRob
    </div>
   </td>
  </tr>
@@ -69,31 +69,31 @@ $(function() {
 <div class="title">frontier_search.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="frontier__search_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef FRONTIER_SEARCH_H_</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef FRONTIER_SEARCH_H_</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define FRONTIER_SEARCH_H_</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;costmap_2d/costmap_2d.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacefrontier__exploration.html">frontier_exploration</a></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>frontier_exploration</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html">   12</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structfrontier__exploration_1_1_frontier.html">Frontier</a> {</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#ab850ad2ae90bf0308cba48ad9d8dec4c">   13</a></span>&#160;  std::uint32_t <a class="code" href="structfrontier__exploration_1_1_frontier.html#ab850ad2ae90bf0308cba48ad9d8dec4c">size</a>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#a9d55b8e1c1276ad52d303e350eb01b36">   14</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structfrontier__exploration_1_1_frontier.html#a9d55b8e1c1276ad52d303e350eb01b36">min_distance</a>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#a83107d241973d2a9ed3e182d590e7e56">   15</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structfrontier__exploration_1_1_frontier.html#a83107d241973d2a9ed3e182d590e7e56">cost</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#a21da5044337952793443ac74b2fdf1cb">   16</a></span>&#160;  geometry_msgs::Point <a class="code" href="structfrontier__exploration_1_1_frontier.html#a21da5044337952793443ac74b2fdf1cb">initial</a>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#a45d35b7dc180ce9382630d9348f722db">   17</a></span>&#160;  geometry_msgs::Point <a class="code" href="structfrontier__exploration_1_1_frontier.html#a45d35b7dc180ce9382630d9348f722db">centroid</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#a76f982fcee65872b354225b95f00ee5b">   18</a></span>&#160;  geometry_msgs::Point <a class="code" href="structfrontier__exploration_1_1_frontier.html#a76f982fcee65872b354225b95f00ee5b">middle</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structfrontier__exploration_1_1_frontier.html#ad124fa5a17e45fedd9e9b00d34182ea3">   19</a></span>&#160;  std::vector&lt;geometry_msgs::Point&gt; <a class="code" href="structfrontier__exploration_1_1_frontier.html#ad124fa5a17e45fedd9e9b00d34182ea3">points</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  std::uint32_t size;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  <span class="keywordtype">double</span> min_distance;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  <span class="keywordtype">double</span> cost;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  geometry_msgs::Point initial;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  geometry_msgs::Point centroid;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  geometry_msgs::Point middle;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  std::vector&lt;geometry_msgs::Point&gt; points;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classfrontier__exploration_1_1_frontier_search.html">   26</a></span>&#160;<span class="keyword">class </span><a class="code" href="classfrontier__exploration_1_1_frontier_search.html">FrontierSearch</a></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classfrontier__exploration_1_1_frontier_search.html#a3396c0bfc5f1c545ae4be16068eeb620">   29</a></span>&#160;  <a class="code" href="classfrontier__exploration_1_1_frontier_search.html#a3396c0bfc5f1c545ae4be16068eeb620">FrontierSearch</a>()</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <a class="code" href="classfrontier__exploration_1_1_frontier_search.html">FrontierSearch</a>()</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  }</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <a class="code" href="classfrontier__exploration_1_1_frontier_search.html#a3396c0bfc5f1c545ae4be16068eeb620">FrontierSearch</a>(costmap_2d::Costmap2D* costmap, <span class="keywordtype">double</span> potential_scale,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <a class="code" href="classfrontier__exploration_1_1_frontier_search.html">FrontierSearch</a>(costmap_2d::Costmap2D* costmap, <span class="keywordtype">double</span> potential_scale,</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                 <span class="keywordtype">double</span> gain_scale, <span class="keywordtype">double</span> min_frontier_size);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  std::vector&lt;Frontier&gt; <a class="code" href="classfrontier__exploration_1_1_frontier_search.html#ac28ed3ce13ab687ed002f74338189f48">searchFrom</a>(geometry_msgs::Point position);</div>
@@ -117,19 +117,10 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_a21da5044337952793443ac74b2fdf1cb"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#a21da5044337952793443ac74b2fdf1cb">frontier_exploration::Frontier::initial</a></div><div class="ttdeci">geometry_msgs::Point initial</div><div class="ttdef"><b>Definition:</b> frontier_search.h:16</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_a76f982fcee65872b354225b95f00ee5b"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#a76f982fcee65872b354225b95f00ee5b">frontier_exploration::Frontier::middle</a></div><div class="ttdeci">geometry_msgs::Point middle</div><div class="ttdef"><b>Definition:</b> frontier_search.h:18</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_ab850ad2ae90bf0308cba48ad9d8dec4c"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#ab850ad2ae90bf0308cba48ad9d8dec4c">frontier_exploration::Frontier::size</a></div><div class="ttdeci">std::uint32_t size</div><div class="ttdef"><b>Definition:</b> frontier_search.h:13</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_a83107d241973d2a9ed3e182d590e7e56"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#a83107d241973d2a9ed3e182d590e7e56">frontier_exploration::Frontier::cost</a></div><div class="ttdeci">double cost</div><div class="ttdef"><b>Definition:</b> frontier_search.h:15</div></div>
-<div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html_a3396c0bfc5f1c545ae4be16068eeb620"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html#a3396c0bfc5f1c545ae4be16068eeb620">frontier_exploration::FrontierSearch::FrontierSearch</a></div><div class="ttdeci">FrontierSearch()</div><div class="ttdef"><b>Definition:</b> frontier_search.h:29</div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html_a4fc0a3e7d14dd1bcab5aa67bae684350"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html#a4fc0a3e7d14dd1bcab5aa67bae684350">frontier_exploration::FrontierSearch::isNewFrontierCell</a></div><div class="ttdeci">bool isNewFrontierCell(unsigned int idx, const std::vector&lt; bool &gt; &amp;frontier_flag)</div><div class="ttdoc">isNewFrontierCell Evaluate if candidate cell is a valid candidate for a new frontier.</div><div class="ttdef"><b>Definition:</b> frontier_search.cpp:172</div></div>
-<div class="ttc" id="anamespacefrontier__exploration_html"><div class="ttname"><a href="namespacefrontier__exploration.html">frontier_exploration</a></div><div class="ttdef"><b>Definition:</b> costmap_tools.h:10</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_a45d35b7dc180ce9382630d9348f722db"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#a45d35b7dc180ce9382630d9348f722db">frontier_exploration::Frontier::centroid</a></div><div class="ttdeci">geometry_msgs::Point centroid</div><div class="ttdef"><b>Definition:</b> frontier_search.h:17</div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html_a46cf94258988537430a3425140803e59"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html#a46cf94258988537430a3425140803e59">frontier_exploration::FrontierSearch::frontierCost</a></div><div class="ttdeci">double frontierCost(const Frontier &amp;frontier)</div><div class="ttdoc">computes frontier cost</div><div class="ttdef"><b>Definition:</b> frontier_search.cpp:191</div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html_a03ab2174fbd43e117cd816aade7d3b38"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html#a03ab2174fbd43e117cd816aade7d3b38">frontier_exploration::FrontierSearch::buildNewFrontier</a></div><div class="ttdeci">Frontier buildNewFrontier(unsigned int initial_cell, unsigned int reference, std::vector&lt; bool &gt; &amp;frontier_flag)</div><div class="ttdoc">Starting from an initial cell, build a frontier from valid adjacent cells.</div><div class="ttdef"><b>Definition:</b> frontier_search.cpp:97</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_ad124fa5a17e45fedd9e9b00d34182ea3"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#ad124fa5a17e45fedd9e9b00d34182ea3">frontier_exploration::Frontier::points</a></div><div class="ttdeci">std::vector&lt; geometry_msgs::Point &gt; points</div><div class="ttdef"><b>Definition:</b> frontier_search.h:19</div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html_ac28ed3ce13ab687ed002f74338189f48"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html#ac28ed3ce13ab687ed002f74338189f48">frontier_exploration::FrontierSearch::searchFrom</a></div><div class="ttdeci">std::vector&lt; Frontier &gt; searchFrom(geometry_msgs::Point position)</div><div class="ttdoc">Runs search implementation, outward from the start position.</div><div class="ttdef"><b>Definition:</b> frontier_search.cpp:27</div></div>
-<div class="ttc" id="astructfrontier__exploration_1_1_frontier_html_a9d55b8e1c1276ad52d303e350eb01b36"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html#a9d55b8e1c1276ad52d303e350eb01b36">frontier_exploration::Frontier::min_distance</a></div><div class="ttdeci">double min_distance</div><div class="ttdef"><b>Definition:</b> frontier_search.h:14</div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html">frontier_exploration::FrontierSearch</a></div><div class="ttdoc">Thread-safe implementation of a frontier-search task for an input costmap.</div><div class="ttdef"><b>Definition:</b> frontier_search.h:27</div></div>
 <div class="ttc" id="astructfrontier__exploration_1_1_frontier_html"><div class="ttname"><a href="structfrontier__exploration_1_1_frontier.html">frontier_exploration::Frontier</a></div><div class="ttdoc">Represents a frontier.</div><div class="ttdef"><b>Definition:</b> frontier_search.h:12</div></div>
 <!-- start footer part -->

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """!
 @section Description
-This scripts is a ROS node that implements publisher to send a GoTo + location command to another node
+This scripts is a ROS node that implements publisher to send a GoTo + location command to the state_machine node 
 
 """
 # Imports
@@ -38,7 +38,8 @@ from geometry_msgs.msg import Quaternion
 
 
 def GoTo():
-    ## publisher to the topic /play_command to send a GoTo command to the FSM
+
+    """! This function implements a publisher to the topic /play_command to send a GoTo command to the state_machine """
     pub_command= rospy.Publisher('play_command', command, queue_size=10)
     rospy.init_node('GoTo', anonymous=True) 
 

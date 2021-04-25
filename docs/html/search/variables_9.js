@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['points_216',['points',['../structfrontier__exploration_1_1_frontier.html#ad124fa5a17e45fedd9e9b00d34182ea3',1,'frontier_exploration::Frontier']]],
-  ['pub_5fstate_217',['pub_state',['../classstate__machine_1_1_normal.html#ad1eac8ef6c3a2d190f57f10f1907ba07',1,'state_machine.Normal.pub_state()'],['../classstate__machine_1_1_sleep.html#a1a5f5d3f50e6ccfe050fdfe9dcafc909',1,'state_machine.Sleep.pub_state()'],['../classstate__machine_1_1_play.html#a10eb1a1c7e6fa040b171f6bb361c5cc3',1,'state_machine.Play.pub_state()'],['../classstate__machine_1_1_find.html#a34de9bc11217a91c12c58fe9992c0727',1,'state_machine.Find.pub_state()']]]
+  ['sub_117',['sub',['../classstate__machine_1_1_normal.html#a80ddfff3edb771b3f51d25e328a9900b',1,'state_machine.Normal.sub()'],['../classstate__machine_1_1_find.html#ab15a1baad43b4f28fecfb9f38c5f5ece',1,'state_machine.Find.sub()']]],
+  ['sub_5fplay_118',['sub_play',['../classstate__machine_1_1_normal.html#a199f13115473bfe699b8f04219f7f075',1,'state_machine::Normal']]],
+  ['sub_5fstate_119',['sub_state',['../classobject__detection_1_1image__feature.html#a0096c3aaadb9938cdc9772bda7983af6',1,'object_detection::image_feature']]]
 ];

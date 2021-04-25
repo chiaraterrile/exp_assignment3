@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>exp_assignment3: exp_assignment3</title>
+<title>Final Project ExpRob: Final assignment of ExpRob</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">exp_assignment3
+   <div id="projectname">Final Project ExpRob
    </div>
   </td>
  </tr>
@@ -62,7 +62,7 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">exp_assignment3 </div>  </div>
+<div class="title">Final assignment of ExpRob </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2><a class="anchor" id="autotoc_md1"></a>
@@ -112,10 +112,10 @@ Packages and file list</h2>
 <li><b>msg</b> where there are the two messages <em>ball.msg</em> for the pub/sub communication between Object Detection and State Machine nodes and <em>command.msg</em> for the pub/sub communication between <a class="el" href="namespace_go_to.html">GoTo</a> and State Machine nodes</li>
 <li><b>param</b> where there are all the files containing the parameters for move_base, local planning and the costmap</li>
 <li><b>scripts</b> where there are the scripts of all the nodes used :<ul>
-<li><em><a class="el" href="state__machine_8py.html">state_machine.py</a></em> which is the node of the State Machine</li>
-<li><em><a class="el" href="object__detection_8py.html">object_detection.py</a></em> which is the node for the Object Detection</li>
-<li><em><a class="el" href="play_8py.html">play.py</a></em> which is the node for Play</li>
-<li><em><a class="el" href="_go_to_8py.html">GoTo.py</a></em> which is the node for <a class="el" href="namespace_go_to.html">GoTo</a></li>
+<li><em>state_machine.py</em> which is the node of the State Machine</li>
+<li><em>object_detection.py</em> which is the node for the Object Detection</li>
+<li><em>play.py</em> which is the node for Play</li>
+<li><em>GoTo.py</em> which is the node for <a class="el" href="namespace_go_to.html">GoTo</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +136,6 @@ Installation and running procedure</h2>
 <h2><a class="anchor" id="autotoc_md6"></a>
 System's limitations</h2>
 <p>One limitation of the system is related to the fact that the Object Detection node is always active (but in stand-by when in Play or Sleep state), so during the Normal state the topic /new_ball_detected is continuously subscribed and if the flag is true it switches in the substate Track. The problem is that in this case, the Move Base Action Server in not shut down, it is still active, but it is like if the object detection had an higher priority, so the robot first reaches the ball and then come back to reach the goal. This is not a problem, except for the case in which the robot, while tracking the ball, follows a trajectory where there is the goal for the Action Server. In this case, the robot keeps tracking tha ball but switches at the same time to the next state of the Normal state. So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn't detecting anything and the Tracking is interrupted.</p>
-<p>This aspect represents a problem because in this case, the colored ball is intended as 'already detected', but the robot has not reached it and stored information about its position, and the result is that the ball won't be followed again, beacuse in the code is intended as known, even if it isn't.</p>
 <p>I have "solved" this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn't switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball's position.</p>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Possible technical improvements</h2>

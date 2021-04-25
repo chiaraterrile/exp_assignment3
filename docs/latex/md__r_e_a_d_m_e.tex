@@ -63,10 +63,10 @@ In the package there are the followinf folders \+:
 \item {\bfseries{param}} where there are all the files containing the parameters for move\+\_\+base, local planning and the costmap
 \item {\bfseries{scripts}} where there are the scripts of all the nodes used \+:
 \begin{DoxyItemize}
-\item {\itshape \mbox{\hyperlink{state__machine_8py}{state\+\_\+machine.\+py}}} which is the node of the State Machine
-\item {\itshape \mbox{\hyperlink{object__detection_8py}{object\+\_\+detection.\+py}}} which is the node for the Object Detection
-\item {\itshape \mbox{\hyperlink{play_8py}{play.\+py}}} which is the node for Play
-\item {\itshape \mbox{\hyperlink{_go_to_8py}{Go\+To.\+py}}} which is the node for \mbox{\hyperlink{namespace_go_to}{Go\+To}}
+\item {\itshape state\+\_\+machine.\+py} which is the node of the State Machine
+\item {\itshape object\+\_\+detection.\+py} which is the node for the Object Detection
+\item {\itshape play.\+py} which is the node for Play
+\item {\itshape Go\+To.\+py} which is the node for \mbox{\hyperlink{namespace_go_to}{Go\+To}}
 \end{DoxyItemize}
 \end{DoxyItemize}
 
@@ -112,8 +112,6 @@ And to send a {\itshape \mbox{\hyperlink{namespace_go_to}{Go\+To}} + location} c
 
 After launching this file, it will be asked to the user to insert a location that will be the one that the robot will have to reach or find.\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{System\textquotesingle{}s limitations}\label{md__r_e_a_d_m_e_autotoc_md6}
 One limitation of the system is related to the fact that the Object Detection node is always active (but in stand-\/by when in Play or Sleep state), so during the Normal state the topic /new\+\_\+ball\+\_\+detected is continuously subscribed and if the flag is true it switches in the substate Track. The problem is that in this case, the Move Base Action Server in not shut down, it is still active, but it is like if the object detection had an higher priority, so the robot first reaches the ball and then come back to reach the goal. This is not a problem, except for the case in which the robot, while tracking the ball, follows a trajectory where there is the goal for the Action Server. In this case, the robot keeps tracking tha ball but switches at the same time to the next state of the Normal state. So it would be a problem for the system if the next state would be Sleep or Play, beacuse in that case the camera is not active, so it isn\textquotesingle{}t detecting anything and the Tracking is interrupted.
-
-This aspect represents a problem because in this case, the colored ball is intended as \textquotesingle{}already detected\textquotesingle{}, but the robot has not reached it and stored information about its position, and the result is that the ball won\textquotesingle{}t be followed again, beacuse in the code is intended as known, even if it isn\textquotesingle{}t.
 
 I have \char`\"{}solved\char`\"{} this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn\textquotesingle{}t switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball\textquotesingle{}s position.\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{Possible technical improvements}\label{md__r_e_a_d_m_e_autotoc_md7}
 A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking.

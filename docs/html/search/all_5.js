@@ -1,14 +1,10 @@
 var searchData=
 [
-  ['find_34',['Find',['../classstate__machine_1_1_find.html',1,'state_machine']]],
-  ['findstate_35',['FindState',['../namespacestate__machine.html#a245d50c110a7f9a18f84230f2ae6f3e5',1,'state_machine']]],
-  ['flag_5fplay_36',['flag_play',['../namespacestate__machine.html#aff716b5770e9a844b416767c01c725fd',1,'state_machine']]],
-  ['foundlocation_37',['FoundLocation',['../namespacestate__machine.html#a16e0cf64953a42184aabc15ebdb0e0ee',1,'state_machine']]],
-  ['frontier_38',['Frontier',['../structfrontier__exploration_1_1_frontier.html',1,'frontier_exploration']]],
-  ['frontier_5fexploration_39',['frontier_exploration',['../namespacefrontier__exploration.html',1,'']]],
-  ['frontier_5fsearch_2ecpp_40',['frontier_search.cpp',['../frontier__search_8cpp.html',1,'']]],
-  ['frontier_5fsearch_2eh_41',['frontier_search.h',['../frontier__search_8h.html',1,'']]],
-  ['frontiercost_42',['frontierCost',['../classfrontier__exploration_1_1_frontier_search.html#a46cf94258988537430a3425140803e59',1,'frontier_exploration::FrontierSearch']]],
-  ['frontiersearch_43',['FrontierSearch',['../classfrontier__exploration_1_1_frontier_search.html',1,'frontier_exploration::FrontierSearch'],['../classfrontier__exploration_1_1_frontier_search.html#a3396c0bfc5f1c545ae4be16068eeb620',1,'frontier_exploration::FrontierSearch::FrontierSearch()'],['../classfrontier__exploration_1_1_frontier_search.html#a0d07b12823e27600de8405d652e9a69a',1,'frontier_exploration::FrontierSearch::FrontierSearch(costmap_2d::Costmap2D *costmap, double potential_scale, double gain_scale, double min_frontier_size)']]],
-  ['final_20assignment_20exprob_44',['Final assignment ExpRob',['../index.html',1,'']]]
+  ['getbaseframeid_27',['getBaseFrameID',['../classexplore_1_1_costmap2_d_client.html#a8e54bc45010f0ea9765faff083636ebf',1,'explore::Costmap2DClient']]],
+  ['getcostmap_28',['getCostmap',['../classexplore_1_1_costmap2_d_client.html#a6c2cb3946a589eb2708092b762a0ca19',1,'explore::Costmap2DClient::getCostmap()'],['../classexplore_1_1_costmap2_d_client.html#a3fab3a225fb105cd8e19a0609b34211e',1,'explore::Costmap2DClient::getCostmap() const']]],
+  ['getglobalframeid_29',['getGlobalFrameID',['../classexplore_1_1_costmap2_d_client.html#a02a8befe4fb9ac9057b89f14379a735c',1,'explore::Costmap2DClient']]],
+  ['getrobotpose_30',['getRobotPose',['../classexplore_1_1_costmap2_d_client.html#ae5a535c3ee0df9bb24cc2f962dcacad9',1,'explore::Costmap2DClient']]],
+  ['global_5fframe_5f_31',['global_frame_',['../classexplore_1_1_costmap2_d_client.html#a7a1947e93767e79127bf7579906aea00',1,'explore::Costmap2DClient']]],
+  ['godetection_32',['GoDetection',['../namespaceobject__detection.html#a97081205effdbab951fe5408301aadfa',1,'object_detection.GoDetection()'],['../namespacestate__machine.html#aa1b704078efcb92a52e5d40beb054eae',1,'state_machine.GoDetection()']]],
+  ['goto_33',['GoTo',['../namespace_go_to.html',1,'GoTo'],['../namespace_go_to.html#a39214845ec01dde7f470feea3829bf89',1,'GoTo.GoTo()']]]
 ];

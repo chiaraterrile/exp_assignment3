@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['init_5ftranslation_5ftable_175',['init_translation_table',['../namespaceexplore.html#a10c3d97c3a8b11559b94afafa1348c38',1,'explore']]],
-  ['isnewfrontiercell_176',['isNewFrontierCell',['../classfrontier__exploration_1_1_frontier_search.html#a4fc0a3e7d14dd1bcab5aa67bae684350',1,'frontier_exploration::FrontierSearch']]]
+  ['main_94',['main',['../namespaceobject__detection.html#ab7cf54dc8d95278848b962310b69d96e',1,'object_detection']]],
+  ['move_95',['Move',['../namespacestate__machine.html#af7167e9334d170d48f5f8af5721a8296',1,'state_machine']]]
 ];

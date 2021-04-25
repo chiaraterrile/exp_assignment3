@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """!
 @section Description
-This scripts is a ROS node that implements a publisher to send a Play command to another node
+This scripts is a ROS node that implements a publisher to send a Play command to the state_machine node
 
 """
 # Imports
@@ -39,7 +39,7 @@ from geometry_msgs.msg import Quaternion
 
 
 def play_command():
-    ## publisher to the topic /play, to inform the FSM that a command play has been sent
+    """! This function implements a publisher to the topic /play, to inform the state_machine that a command play has been sent """
     pub = rospy.Publisher('play', Bool, queue_size=10)
     rospy.init_node('play', anonymous=True)
     ## flag set to true whenever this node is launched

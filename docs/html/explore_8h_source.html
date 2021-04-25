@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>exp_assignment3: explore/include/explore/explore.h Source File</title>
+<title>Final Project ExpRob: explore/include/explore/explore.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">exp_assignment3
+   <div id="projectname">Final Project ExpRob
    </div>
   </td>
  </tr>
@@ -69,7 +69,7 @@ $(function() {
 <div class="title">explore.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="explore_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*********************************************************************</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*********************************************************************</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Software License Agreement (BSD License)</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
@@ -119,19 +119,19 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &lt;ros/ros.h&gt;</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &lt;visualization_msgs/MarkerArray.h&gt;</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="costmap__client_8h.html">explore/costmap_client.h</a>&gt;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="frontier__search_8h.html">explore/frontier_search.h</a>&gt;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;explore/costmap_client.h&gt;</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &lt;explore/frontier_search.h&gt;</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceexplore.html">explore</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span>explore</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
 <div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classexplore_1_1_explore.html">   61</a></span>&#160;<span class="keyword">class </span><a class="code" href="classexplore_1_1_explore.html">Explore</a></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <a class="code" href="classexplore_1_1_explore.html#a25c9e2c8405191f3df7f86216daa7654">Explore</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <a class="code" href="classexplore_1_1_explore.html#afed6d2d29f9b51d78c9b594204518631">~Explore</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <a class="code" href="classexplore_1_1_explore.html">Explore</a>();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  ~<a class="code" href="classexplore_1_1_explore.html">Explore</a>();</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classexplore_1_1_explore.html#add4e807fa7294de7c23bc69df2b17016">start</a>();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classexplore_1_1_explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">stop</a>();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">void</span> start();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordtype">void</span> stop();</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> makePlan();</div>
@@ -173,15 +173,8 @@ $(function() {
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassexplore_1_1_explore_html_afed6d2d29f9b51d78c9b594204518631"><div class="ttname"><a href="classexplore_1_1_explore.html#afed6d2d29f9b51d78c9b594204518631">explore::Explore::~Explore</a></div><div class="ttdeci">~Explore()</div><div class="ttdef"><b>Definition:</b> explore.cpp:90</div></div>
-<div class="ttc" id="afrontier__search_8h_html"><div class="ttname"><a href="frontier__search_8h.html">frontier_search.h</a></div></div>
-<div class="ttc" id="aclassexplore_1_1_explore_html_add4e807fa7294de7c23bc69df2b17016"><div class="ttname"><a href="classexplore_1_1_explore.html#add4e807fa7294de7c23bc69df2b17016">explore::Explore::start</a></div><div class="ttdeci">void start()</div><div class="ttdef"><b>Definition:</b> explore.cpp:283</div></div>
 <div class="ttc" id="aclassexplore_1_1_costmap2_d_client_html"><div class="ttname"><a href="classexplore_1_1_costmap2_d_client.html">explore::Costmap2DClient</a></div><div class="ttdef"><b>Definition:</b> costmap_client.h:51</div></div>
-<div class="ttc" id="aclassexplore_1_1_explore_html_a7bfe8dd552d3816166e7ff32aaee47b6"><div class="ttname"><a href="classexplore_1_1_explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">explore::Explore::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> explore.cpp:288</div></div>
-<div class="ttc" id="aclassexplore_1_1_explore_html_a25c9e2c8405191f3df7f86216daa7654"><div class="ttname"><a href="classexplore_1_1_explore.html#a25c9e2c8405191f3df7f86216daa7654">explore::Explore::Explore</a></div><div class="ttdeci">Explore()</div><div class="ttdef"><b>Definition:</b> explore.cpp:53</div></div>
-<div class="ttc" id="anamespaceexplore_html"><div class="ttname"><a href="namespaceexplore.html">explore</a></div><div class="ttdef"><b>Definition:</b> costmap_client.h:49</div></div>
 <div class="ttc" id="aclassexplore_1_1_explore_html"><div class="ttname"><a href="classexplore_1_1_explore.html">explore::Explore</a></div><div class="ttdoc">A class adhering to the robot_actions::Action interface that moves the robot base to explore its envi...</div><div class="ttdef"><b>Definition:</b> explore.h:62</div></div>
-<div class="ttc" id="acostmap__client_8h_html"><div class="ttname"><a href="costmap__client_8h.html">costmap_client.h</a></div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1_frontier_search_html"><div class="ttname"><a href="classfrontier__exploration_1_1_frontier_search.html">frontier_exploration::FrontierSearch</a></div><div class="ttdoc">Thread-safe implementation of a frontier-search task for an input costmap.</div><div class="ttdef"><b>Definition:</b> frontier_search.h:27</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

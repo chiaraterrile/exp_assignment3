@@ -83,15 +83,15 @@ class Coordinates :
 GoDetection = False 
 ## flag that indicates if is possible to launch the explore_lite node (used to avoid the node to be continuosly launched when we are in the Find state)
 LaunchExploration = True
-## flag that indicates if the robot is in the FIND state (used in the case of the substate Track to differentiate the behaviour from the Normal state)
+## flag that indicates if the robot is in the Find state (used in the case of the substate Track to differentiate the behaviour from the Normal state)
 FindState = False
 ## flag that indicates if a new object has been detected if in Normal or Find state
 det = False    
-## flag that indicates if a command 'play' has been given by the user
+## flag that indicates if a command play has been given by the user
 flag_play = False 
 ## flag that indicates if in the Find state the desired location has been found
 FoundLocation = False
-## flag that idicates if the robot is tracking a ball in order to avoid returning sleep if the robot reaches the target in the mean time
+## flag that idicates if the robot is tracking a ball in order to avoid returning Sleep if the robot reaches the target in the mean time
 TrackOnDoing = False 
 ## Flag that idicates if the robot is in the Normal state, that is the only state from which the robot can switch to Play state if the command is received by the user
 NormalState = False 
@@ -103,7 +103,7 @@ NormalState = False
 desired_location =' '
 ## variable to launch and stop the node explore_lite
 child = None 
-## variable that contains informations about the ball position (found during the object detection) and its color      
+## variable that contains informations about the ball position (found during the object_detection) and its color      
 ball_info = ball()
 ## variable that contains the command given by the user ( GoTo command + desired location)
 command_play = command()
@@ -294,8 +294,8 @@ def clbk_track(msg):
 def user_action():
 	"""! this function controls the next state of the FSM (in the NORMAL state) according to the action of the user. 
     @return play if the flag_play is True 
-    @return normal if in substate Track
-    @return normal or sleep otherwise
+    @return Normal if in substate Track
+    @return Normal or Sleep otherwise
     """
         if flag_play :
                 return ('play')

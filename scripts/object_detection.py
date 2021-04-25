@@ -28,7 +28,7 @@ VERBOSE = False
 
 # Global flags
 
-## flag that indicates if the robot is in a state that allows the object detection (NORMAL or FIND) or not
+## flag that indicates if the robot is in a state that allows the object detection (Normal or Find) or not
 GoDetection = False
 ## flags that indicate if an object of that color has been already detected or not
 red_detected = False

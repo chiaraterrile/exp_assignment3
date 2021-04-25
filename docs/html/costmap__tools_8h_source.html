@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>exp_assignment3: explore/include/explore/costmap_tools.h Source File</title>
+<title>Final Project ExpRob: explore/include/explore/costmap_tools.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">exp_assignment3
+   <div id="projectname">Final Project ExpRob
    </div>
   </td>
  </tr>
@@ -69,7 +69,7 @@ $(function() {
 <div class="title">costmap_tools.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="costmap__tools_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef COSTMAP_TOOLS_H_</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef COSTMAP_TOOLS_H_</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define COSTMAP_TOOLS_H_</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;costmap_2d/costmap_2d.h&gt;</span></div>
@@ -77,9 +77,9 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;geometry_msgs/PolygonStamped.h&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;ros/ros.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="namespacefrontier__exploration.html">    9</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacefrontier__exploration.html">frontier_exploration</a></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>frontier_exploration</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="namespacefrontier__exploration.html#affc5c02b52db13456c62dc5f707efa6f">   18</a></span>&#160;std::vector&lt;unsigned int&gt; <a class="code" href="namespacefrontier__exploration.html#affc5c02b52db13456c62dc5f707efa6f">nhood4</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> idx,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;std::vector&lt;unsigned int&gt; nhood4(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> idx,</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                                 <span class="keyword">const</span> costmap_2d::Costmap2D&amp; costmap)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="comment">// get 4-connected neighbourhood indexes, check for edge of map</span></div>
@@ -108,11 +108,11 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespacefrontier__exploration.html#aff5530dc70914d4cfde4f455ecaa0cd6">   54</a></span>&#160;std::vector&lt;unsigned int&gt; <a class="code" href="namespacefrontier__exploration.html#aff5530dc70914d4cfde4f455ecaa0cd6">nhood8</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> idx,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;std::vector&lt;unsigned int&gt; nhood8(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> idx,</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                 <span class="keyword">const</span> costmap_2d::Costmap2D&amp; costmap)</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="comment">// get 8-connected neighbourhood indexes, check for edge of map</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::vector&lt;unsigned int&gt; out = <a class="code" href="namespacefrontier__exploration.html#affc5c02b52db13456c62dc5f707efa6f">nhood4</a>(idx, costmap);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::vector&lt;unsigned int&gt; out = nhood4(idx, costmap);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size_x_ = costmap.getSizeInCellsX(),</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;               size_y_ = costmap.getSizeInCellsY();</div>
@@ -137,7 +137,7 @@ $(function() {
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="namespacefrontier__exploration.html#a1919c053e430083b7fb366501fff518c">   91</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespacefrontier__exploration.html#a1919c053e430083b7fb366501fff518c">nearestCell</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&amp; result, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> start, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> val,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">bool</span> nearestCell(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&amp; result, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> start, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> val,</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                 <span class="keyword">const</span> costmap_2d::Costmap2D&amp; costmap)</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* map = costmap.getCharMap();</div>
@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">// iterate over all adjacent unvisited cells</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> nbr : <a class="code" href="namespacefrontier__exploration.html#aff5530dc70914d4cfde4f455ecaa0cd6">nhood8</a>(idx, costmap)) {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> nbr : nhood8(idx, costmap)) {</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      <span class="keywordflow">if</span> (!visited_flag[nbr]) {</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        bfs.push(nbr);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        visited_flag[nbr] = <span class="keyword">true</span>;</div>
@@ -181,10 +181,6 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="anamespacefrontier__exploration_html_aff5530dc70914d4cfde4f455ecaa0cd6"><div class="ttname"><a href="namespacefrontier__exploration.html#aff5530dc70914d4cfde4f455ecaa0cd6">frontier_exploration::nhood8</a></div><div class="ttdeci">std::vector&lt; unsigned int &gt; nhood8(unsigned int idx, const costmap_2d::Costmap2D &amp;costmap)</div><div class="ttdoc">Determine 8-connected neighbourhood of an input cell, checking for map edges.</div><div class="ttdef"><b>Definition:</b> costmap_tools.h:54</div></div>
-<div class="ttc" id="anamespacefrontier__exploration_html_a1919c053e430083b7fb366501fff518c"><div class="ttname"><a href="namespacefrontier__exploration.html#a1919c053e430083b7fb366501fff518c">frontier_exploration::nearestCell</a></div><div class="ttdeci">bool nearestCell(unsigned int &amp;result, unsigned int start, unsigned char val, const costmap_2d::Costmap2D &amp;costmap)</div><div class="ttdoc">Find nearest cell of a specified value.</div><div class="ttdef"><b>Definition:</b> costmap_tools.h:91</div></div>
-<div class="ttc" id="anamespacefrontier__exploration_html"><div class="ttname"><a href="namespacefrontier__exploration.html">frontier_exploration</a></div><div class="ttdef"><b>Definition:</b> costmap_tools.h:10</div></div>
-<div class="ttc" id="anamespacefrontier__exploration_html_affc5c02b52db13456c62dc5f707efa6f"><div class="ttname"><a href="namespacefrontier__exploration.html#affc5c02b52db13456c62dc5f707efa6f">frontier_exploration::nhood4</a></div><div class="ttdeci">std::vector&lt; unsigned int &gt; nhood4(unsigned int idx, const costmap_2d::Costmap2D &amp;costmap)</div><div class="ttdoc">Determine 4-connected neighbourhood of an input cell, checking for map edges.</div><div class="ttdef"><b>Definition:</b> costmap_tools.h:18</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20
