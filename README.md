@@ -31,7 +31,7 @@ While is unknown the position, that will be stored during the substate TRACK whe
 ### Software architecture
 
 The main blocks of the software architecture are the following.
-<img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/architecture.png" alt=" " width="600" height="400"/>
+<img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
 
 All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
 This is done through a pub/sub communication to the topic _/state_fsm_ with a message of type Bool() that is true when the Object Detection is allowed.
