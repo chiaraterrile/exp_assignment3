@@ -33,7 +33,7 @@ While is unknown the position, that will be stored during the substate TRACK whe
 The main blocks of the software architecture are the following.
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
 
-All the behaviours are controlled by the State Machine. When passing a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
+All the behaviours are controlled by the State Machine. When passing to a new state, this node communicate to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
 This is done through a pub/sub communication to the topic _/state_fsm_ with a message of type Bool() that is true when the Object Detection is allowed.
 
 The State Machine, according to the state in which is, send a Goal to the Move Base Action server through the topic _/move_base_, in order to reach that position (that can be home position, random position or user position). In instead the robot is in the Find state, the Explore node is launched. This node works with the _explore_lite_ package and allows the robot to explore the unkwnown enviroment. 
