@@ -48,6 +48,7 @@ This node also communicates to the State Machine the informations about the new 
 
 This type of message has the following structure : 
 
+_ball.msg_
 ```
 float32 x
 float32 y
@@ -60,7 +61,7 @@ When the user wants to send a _play_ command, is launched the node Play, that co
 Instad, when the user wants to send a _GoTo_ command, is launched the node GoTo that communicates to the State Machine a GoTo + location command. This is done through the topic _/play_command_, and the message is of type command(). 
 This message has the following structure : 
 
-**command.msg**
+_command.msg_
 ```
 string go
 string location
@@ -77,8 +78,9 @@ to see the nodes and active topics in that precise moment of the simulation.
 
 The only package for this project is _exp_assignment3_.
 
-In the package there are the followinf folders :
+In the package there are the following folders :
 - **config** where there is che configuration file for RViz
+- **docs** where there are the documentation files in html or latex format.
 - **explore** which is the folder for launching the explore_lite package
 - **launch** where there are all the launch files for the simulation
 - **msg** where there are the two messages _ball.msg_ for the pub/sub communication between Object Detection and State Machine nodes and _command.msg_ for the pub/sub communication between GoTo and State Machine nodes
@@ -90,6 +92,7 @@ In the package there are the followinf folders :
     - _GoTo.py_ which is the node for GoTo
  - **urdf** where there are all the .urdf, .gazebo and .xacro that describe the robot with its sensors and the human
  - **worlds** where is the file_ house2.world_ that describes the simulation enviroment
+
 
 ### Installation and running procedure
 To run the simulation it's necessary to put the package in a ROS workspace and then in the terminal run:
@@ -125,10 +128,12 @@ So it would be a problem for the system if the next state would be Sleep or Play
 
 I have "solved" this problem by putting a flag that indicates wheter or not the robot is in Tracking mode, so that, in the particular case where it reaches the goal while tracking, it doesn't switches to Sleep state, but remains in Normal, allowing the robot to conclude the Tracking and to store the ball's position.
 
+Another limitation, is related to the fact that in very rare cases, the position of the goal that is sent to the Move Base Action server, is not correctly positioned in the map in RViz, and this is a problem when this point is accidentaly out of the map. For example in some cases the user position, which is fixed, is not near the user, but it outside the map and so the robot cannot reach it. I haven't been able to solve this aspect, since I don't know if it is related to the system, or to other aspects beacuse this in not an always present problem, but happens in some rare cases.
+
 ### Possible technical improvements
 A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking. 
 
-Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster and to make the response of the Action Server faster too, but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient, without risking the robot to remain stacked somewhere, as in some rare cases happens (depending on the direction that is following and on the wall positions).
+Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster, to make the response of the Action Server faster too and to have a bigger radious when avoiding obstacles (inflation radious paramter in the costmap), but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient, without risking the robot to remain stacked somewhere, as in some rare cases happens (depending on the direction that is following and on the wall positions).
 
 
 ### Author and contact
