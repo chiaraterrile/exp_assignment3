@@ -70,7 +70,7 @@ string color
 
 
 
-Where x and y are the coordinates of the ball and color is the indeed the color of the detected object.
+Where _x_ and _y_ are the coordinates of the ball and _color_ is the indeed the color of the detected object.
 
 When the user wants to send a _play_ command, is launched the node Play, that communicates to the State Machine that needs to switch to the Play state. This is done thruogh the topic /play and a message of type Bool() is sent.
 
@@ -110,7 +110,7 @@ In the package there are the following folders :
     - _play.py_ which is the node for Play
     - _GoTo.py_ which is the node for GoTo
  - **urdf** where there are all the .urdf, .gazebo and .xacro that describe the robot with its sensors and the human
- - **worlds** where is the file_ house2.world_ that describes the simulation enviroment
+ - **worlds** where is the file _house2.world_ that describes the simulation enviroment
 
 
 ### Installation and running procedure
