@@ -1,9 +1,11 @@
 # Final assignment of ExpRob
 
 ### Introduction
-This project is based on the navigation of a wheeled robot (with an RGB camera and a laser) in an enviroment with walls and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..). The robot is able to switch in different states, according to what it sees, and according to the user commands.
+This project is based on the navigation of a wheeled robot (with an RGB camera and a laser) in an enviroment with walls and colored balls that correspond to a precise location (e.g. living room, kitchen ecc..), see Figure 1. The robot is able to switch in different states, according to what it sees, and according to the user commands.
 
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/enviroment.png" alt=" " width="600" height="400"/>
+
+_Figure 1 : Gazebo enviroment_
 
 ### Robot's behaviours
 
@@ -11,7 +13,8 @@ This project is based on the navigation of a wheeled robot (with an RGB camera a
 The robot has four main states (behaviour) :
 
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/FSM.jpg" alt=" " width="500" height="300"/>
-_states of the robot_
+
+_Figure 2 : robot's behaviours_
 
 * **SLEEP** : in this state the robot goes to a fixed position (in this case is the origin (0,0,0)) where is the home. Once reached the home, the robot stays there for a certain amount of time and then switches to NORMAL behaviour.
 * **NORMAL** : in this state the robot goes in random positions and every time it detects a new object it switches to the substate TRACK. If nothing has been found, once reached the location, the robot can switch to NORMAL again, or to SLEEP.
@@ -39,6 +42,8 @@ While is unknown the position, that will be stored during the substate TRACK whe
 The main blocks of the software architecture are the following.
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
 
+Figure 3 : software architecture
+
 All the behaviours are controlled by the State Machine. When passing to a new state, this node communicates to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
 This is done through a pub/sub communication to the topic _/state_fsm_ with a message of type Bool() that is true when the Object Detection is allowed.
 
@@ -54,12 +59,15 @@ This node also communicates to the State Machine the informations about the new 
 
 This type of message has the following structure : 
 
-_ball.msg_
+
 ```
 float32 x
 float32 y
 string color
 ```
+
+_ball.msg_
+
 Where x and y are the coordinates of the ball and color is the indeed the color of the detected object.
 
 When the user wants to send a _play_ command, is launched the node Play, that communicates to the State Machine that needs to switch to the Play state. This is done thruogh the topic /play and a message of type Bool() is sent.
@@ -67,12 +75,14 @@ When the user wants to send a _play_ command, is launched the node Play, that co
 Instad, when the user wants to send a _GoTo_ command, is launched the node GoTo that communicates to the State Machine a GoTo + location command. This is done through the topic _/play_command_, and the message is of type command(). 
 This message has the following structure : 
 
-_command.msg_
+
 ```
 string go
 string location
 
 ```
+_command.msg_
+
 The _go_ field contains a 'GoTo' string when the user want to give a command, while the _location_ field is the desired location where we want the robot to go.
 
 For a more complete architecture, write in the shell the following command :
