@@ -610,7 +610,7 @@ class Find(smach.State):
 	
 
         smach.State.__init__(self, 
-			                 outcomes=['normal','find','play'],
+			                 outcomes=['find','play'],
                              input_keys=['find_counter_in'],
                              output_keys=['find_counter_out'])
 
@@ -684,7 +684,7 @@ def main():
                                           'normal_counter_out':'sm_counter'})
 
         smach.StateMachine.add('PLAY', Play(), 
-                               transitions={'sleep':'SLEEP','find':'FIND','play':'PLAY','normal':'NORMAL'
+                               transitions={'find':'FIND','play':'PLAY','normal':'NORMAL'
 					    },
                                             
 							
@@ -702,7 +702,7 @@ def main():
                                           'sleeping_counter_out':'sm_counter'})
         
         smach.StateMachine.add('FIND', Find(), 
-                               transitions={'normal':'NORMAL','find':'FIND','play':'PLAY'},
+                               transitions={'find':'FIND','play':'PLAY'},
 
                                remapping={'find_counter_in':'sm_counter',
                                           'find_counter_out':'sm_counter'})
