@@ -40,6 +40,7 @@ While is unknown the position, that will be stored during the substate TRACK whe
 ### Software architecture
 
 The main blocks of the software architecture are the following.
+
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
 
 _Figure 3 : software architecture_
