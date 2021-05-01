@@ -7,7 +7,12 @@ This project is based on the navigation of a wheeled robot (with an RGB camera a
 
 ### Robot's behaviours
 
+
 The robot has four main states (behaviour) :
+
+<img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/FSM.jpg" alt=" " width="500" height="300"/>
+_states of the robot_
+
 * **SLEEP** : in this state the robot goes to a fixed position (in this case is the origin (0,0,0)) where is the home. Once reached the home, the robot stays there for a certain amount of time and then switches to NORMAL behaviour.
 * **NORMAL** : in this state the robot goes in random positions and every time it detects a new object it switches to the substate TRACK. If nothing has been found, once reached the location, the robot can switch to NORMAL again, or to SLEEP.
 * **PLAY** : the robot goes in this state whenever it receives a command *play* by the user. When in this state, the robot goes to the user position (which is fixed) and waits for a GoTo command. When a GoTo command is received, if the location is known, the robot reaches that location and then comes back to the user, waiting for another command. If the locations is unknown, the robot switches to the state FIND.
@@ -27,6 +32,7 @@ In advance is known the correspondence between a location and the color of the r
 - yellow -> kitchen
 
 While is unknown the position, that will be stored during the substate TRACK whenever a new ball is detected.
+
 
 ### Software architecture
 
