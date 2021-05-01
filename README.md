@@ -42,7 +42,7 @@ While is unknown the position, that will be stored during the substate TRACK whe
 The main blocks of the software architecture are the following.
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/Architecture.png" alt=" " width="600" height="400"/>
 
-Figure 3 : software architecture
+_Figure 3 : software architecture_
 
 All the behaviours are controlled by the State Machine. When passing to a new state, this node communicates to the Object Detection if the state allows the detection (Normal or Find) or not (Play or Sleep). So if in Play or Sleep the Object Detection algortihm is basically in stand-by because we don't want to track anything.
 This is done through a pub/sub communication to the topic _/state_fsm_ with a message of type Bool() that is true when the Object Detection is allowed.
@@ -59,6 +59,7 @@ This node also communicates to the State Machine the informations about the new 
 
 This type of message has the following structure : 
 
+_ball.msg_
 
 ```
 float32 x
@@ -66,7 +67,7 @@ float32 y
 string color
 ```
 
-_ball.msg_
+
 
 Where x and y are the coordinates of the ball and color is the indeed the color of the detected object.
 
@@ -75,13 +76,14 @@ When the user wants to send a _play_ command, is launched the node Play, that co
 Instad, when the user wants to send a _GoTo_ command, is launched the node GoTo that communicates to the State Machine a GoTo + location command. This is done through the topic _/play_command_, and the message is of type command(). 
 This message has the following structure : 
 
+_command.msg_
 
 ```
 string go
 string location
 
 ```
-_command.msg_
+
 
 The _go_ field contains a 'GoTo' string when the user want to give a command, while the _location_ field is the desired location where we want the robot to go.
 
@@ -146,6 +148,7 @@ I have "solved" this problem by putting a flag that indicates wheter or not the 
 
 Another limitation, is related to the fact that in very rare cases, the position of the goal that is sent to the Move Base Action server, is not correctly positioned in the map in RViz, and this is a problem when this point is accidentaly out of the map. For example in some cases the user position, which is fixed, is not near the user, but it outside the map and so the robot cannot reach it. I haven't been able to solve this aspect, since I don't know if it is related to the system, or to other aspects beacuse this in not an always present problem, but happens in some rare cases.
 
+
 ### Possible technical improvements
 A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking. 
 
@@ -154,4 +157,5 @@ Another possible improvement is related to the choice of the paramters for the m
 
 ### Author and contact
 Terrile Chiara
+
 mail: **chiaraterrile97@gmail.com**
