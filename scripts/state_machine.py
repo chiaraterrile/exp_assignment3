@@ -428,7 +428,7 @@ class Play(smach.State):
     """! Define the Play state  """
     def __init__(self):
         smach.State.__init__(self, 
-			                 outcomes=['sleep','find','play','normal'],
+			                 outcomes=['find','play','normal'],
                              input_keys=['playing_counter_in'],
                              output_keys=['playing_counter_out'])
         ## publisher to the topic /state_fsm, used to indicate if we are in a state that allows the substate Track (possible in Normal or Find) or not

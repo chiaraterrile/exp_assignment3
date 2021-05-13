@@ -133,11 +133,11 @@ in order to kill all the processes before launching the file and avoide problems
 
 Whenever the user want to make the robot go in the Play state:
 ```
-$ roslaunch exp_assignment3 play.py
+$ rosrun exp_assignment3 play.py
 ```
 And to send a _GoTo + location_ command :
 ```
-$ roslaunch exp_assignment3 GoTo.py
+$ rosrun exp_assignment3 GoTo.py
 ```
 After launching this file, it will be asked to the user to insert a location that will be the one that the robot will have to reach or find.
 
