@@ -10,7 +10,7 @@ _Figure 1 : Gazebo enviroment_
 ### Robot's behaviours
 
 
-The robot has four main states (behaviour) :
+The robot has four main states (behaviour) and a substate :
 
 <img src="https://github.com/chiaraterrile/exp_assignment3/blob/main/Images/FSM.jpg" alt=" " width="500" height="300"/>
 
