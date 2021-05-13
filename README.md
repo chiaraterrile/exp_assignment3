@@ -153,7 +153,7 @@ Another limitation, is related to the fact that in very rare cases, the position
 ### Possible technical improvements
 A possible improvement is to solve the problem mentioned before, providing a way to pause the Action Server in some way, without using the cancel message, to avoid that the robot reaches the goal while tracking. 
 
-Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster, to make the response of the Action Server faster too and to have a bigger radious when avoiding obstacles (inflation radious paramter in the costmap), but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient, without risking the robot to remain stacked somewhere, as in some rare cases happens (depending on the direction that is following and on the wall positions).
+Another possible improvement is related to the choice of the paramters for the move base and the local planner. I have changed some of them in order to make the robot faster, to make the response of the Action Server faster too and to have a bigger radious when avoiding obstacles (inflation radious paramter in the costmap), but I think that there are maybe other paramters that I could have modified in order to make the navigation more fluid and efficient.
 
 
 ### Author and contact
